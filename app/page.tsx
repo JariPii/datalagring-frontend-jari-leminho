@@ -1,11 +1,10 @@
-import Hero from '@/components/hero/Hero';
+import AttendeesTable from '@/components/attendees/AttendeesTable';
 
 export default function Home() {
   return (
     <main className='flex flex-col w-full grow mt-[10dvh]'>
-      <Hero />
-      <div className='h-14 flex items-center justify-center bg-violet-900'>
-        Content container
+      <div className='min-h-14 flex items-center flex-col grow py-20 justify-center bg-violet-900'>
+        <AttendeesTable />
       </div>
     </main>
   );

@@ -1,4 +1,4 @@
-import { Attendee } from './types';
+import { Attendee, Course } from './types';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -22,4 +22,10 @@ async function fetcher<T>(endpoint: string, options?: RequestInit): Promise<T> {
 export const attendeeService = {
   getAll: (ct?: AbortSignal) =>
     fetcher<Attendee[]>('/attendees', { signal: ct }),
+
+  getById: (id: string) => fetcher<Attendee>(`/attendees/${id}`),
+};
+
+export const courseService = {
+  getAll: (ct?: AbortSignal) => fetcher<Course[]>('/courses', { signal: ct }),
 };
