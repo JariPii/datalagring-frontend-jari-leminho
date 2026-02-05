@@ -1,7 +1,5 @@
-import React from 'react';
-
 const CourseSessions = () => {
-  return <div>CourseSessions</div>;
+  return <h1>Sessions</h1>;
 };
 
 export default CourseSessions;
