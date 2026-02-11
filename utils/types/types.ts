@@ -1,4 +1,6 @@
 export type AttendeeRole = 'Student' | 'Instructor';
+export type CourseType = 'GRD' | 'FDJ';
+export type CourseTypeName = 'Grundkurs' | 'Försdjupningskurs';
 
 export type Competence = {
   id: string;
@@ -8,6 +10,7 @@ export type Competence = {
 };
 
 export type Attendee = {
+  $type: string;
   id: string;
   email: string;
   firstName: string;
@@ -20,8 +23,12 @@ export type Attendee = {
 
 export type Course = {
   id: string;
+  courseCode: string;
+  courseType: CourseType;
+  courseTypeName: CourseTypeName;
   courseName: string;
   courseDescription: string;
+  rowVersion: string;
 };
 
 export type Location = {

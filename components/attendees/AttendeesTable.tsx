@@ -10,6 +10,7 @@ import {
   TableRow,
 } from '../ui/table';
 import Link from 'next/link';
+
 const AttendeesTable = async () => {
   const attendees = await attendeeService.getAll();
 
