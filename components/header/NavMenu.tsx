@@ -6,8 +6,6 @@ import {
   MenubarGroup,
   MenubarItem,
   MenubarMenu,
-  MenubarSeparator,
-  MenubarShortcut,
   MenubarTrigger,
 } from '../ui/menubar';
 import { links } from '@/utils/links';
@@ -19,12 +17,6 @@ const NavMenu = () => {
         <MenubarMenu>
           <MenubarTrigger>Navigate</MenubarTrigger>
           <MenubarContent>
-            {/* <MenubarGroup>
-              <MenubarItem>
-                New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-              </MenubarItem>
-            </MenubarGroup> */}
-            {/* <MenubarSeparator /> */}
             <MenubarGroup>
               {links.map((link) => {
                 return (
