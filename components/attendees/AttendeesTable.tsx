@@ -10,12 +10,15 @@ import {
   TableRow,
 } from '../ui/table';
 import Link from 'next/link';
+import { serverFetcher } from '@/utils/fetcher.server';
+import { Attendee } from '@/utils/types/types';
 
 const AttendeesTable = async () => {
-  const attendees = await attendeeService.getAll();
+  // const attendees = await attendeeService.getAll();
+  const attendees = await serverFetcher<Attendee[]>('/attendees');
 
   return (
-    <>
+    <div className='w-full max-w-300'>
       <h1 className='font-bold text-2xl mb-6 underline'>Attendees</h1>
       <Table>
         <TableCaption>All attendees</TableCaption>
@@ -53,7 +56,7 @@ const AttendeesTable = async () => {
           </TableRow>
         </TableFooter>
       </Table>
-    </>
+    </div>
   );
 };
 

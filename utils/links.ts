@@ -10,5 +10,5 @@ export const links: LinkItem[] = [
   { label: 'Competences', href: '/competences' },
   { label: 'Courses', href: '/courses' },
   { label: 'Lcations', href: '/locations' },
-  { label: 'Sessions', href: '/sessions' },
+  // { label: 'Sessions', href: '/sessions' },
 ];

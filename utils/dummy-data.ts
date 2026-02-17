@@ -13,6 +13,7 @@ export const mockAttendee: Attendee[] = [
     phoneNumber: null,
     rowVersion: 'AAAAAAAA4pM=',
     competences: [],
+    createdAt: '2026-01-02',
   },
   {
     $type: 'student',
@@ -23,6 +24,7 @@ export const mockAttendee: Attendee[] = [
     email: 'myrtle77@hotmail.com',
     phoneNumber: null,
     rowVersion: 'AAAAAAABAdQ=',
+    createdAt: '2026-01-02',
   },
   {
     $type: 'instructor',
@@ -34,6 +36,7 @@ export const mockAttendee: Attendee[] = [
     phoneNumber: null,
     rowVersion: 'AAAAAAAA4pI=',
     competences: [],
+    createdAt: '2026-01-02',
   },
   {
     $type: 'instructor',
@@ -45,6 +48,7 @@ export const mockAttendee: Attendee[] = [
     phoneNumber: null,
     rowVersion: 'AAAAAAAA4pE=',
     competences: [],
+    createdAt: '2026-01-02',
   },
   {
     $type: 'instructor',
@@ -56,6 +60,7 @@ export const mockAttendee: Attendee[] = [
     phoneNumber: null,
     rowVersion: 'AAAAAAAA4pY=',
     competences: [],
+    createdAt: '2026-01-02',
   },
   {
     $type: 'instructor',
@@ -67,6 +72,7 @@ export const mockAttendee: Attendee[] = [
     phoneNumber: null,
     rowVersion: 'AAAAAAAA4pQ=',
     competences: [],
+    createdAt: '2026-01-02',
   },
   {
     $type: 'instructor',
@@ -78,6 +84,7 @@ export const mockAttendee: Attendee[] = [
     phoneNumber: null,
     rowVersion: 'AAAAAAAA4pU=',
     competences: [],
+    createdAt: '2026-01-02',
   },
   {
     $type: 'student',
@@ -88,6 +95,7 @@ export const mockAttendee: Attendee[] = [
     email: 'sofia43@yahoo.com',
     phoneNumber: null,
     rowVersion: 'AAAAAAABAdc=',
+    createdAt: '2026-01-02',
   },
   {
     $type: 'student',
@@ -98,6 +106,7 @@ export const mockAttendee: Attendee[] = [
     email: 'terrill35@yahoo.com',
     phoneNumber: null,
     rowVersion: 'AAAAAAABAd4=',
+    createdAt: '2026-01-02',
   },
   {
     $type: 'student',
@@ -108,6 +117,7 @@ export const mockAttendee: Attendee[] = [
     email: 'roscoe_dubuque@hotmail.com',
     phoneNumber: null,
     rowVersion: 'AAAAAAABAdE=',
+    createdAt: '2026-01-02',
   },
   {
     $type: 'student',
@@ -118,6 +128,7 @@ export const mockAttendee: Attendee[] = [
     email: 'yolanda_gislason@yahoo.com',
     phoneNumber: null,
     rowVersion: 'AAAAAAABAds=',
+    createdAt: '2026-01-02',
   },
   {
     $type: 'student',
@@ -128,6 +139,7 @@ export const mockAttendee: Attendee[] = [
     email: 'enid_mertz@yahoo.com',
     phoneNumber: null,
     rowVersion: 'AAAAAAABAdw=',
+    createdAt: '2026-01-02',
   },
   {
     $type: 'student',
@@ -138,6 +150,7 @@ export const mockAttendee: Attendee[] = [
     email: 'kristoffer.dare77@hotmail.com',
     phoneNumber: null,
     rowVersion: 'AAAAAAABAdI=',
+    createdAt: '2026-01-02',
   },
   {
     $type: 'student',
@@ -148,6 +161,7 @@ export const mockAttendee: Attendee[] = [
     email: 'michele58@gmail.com',
     phoneNumber: null,
     rowVersion: 'AAAAAAABAdo=',
+    createdAt: '2026-01-02',
   },
   {
     $type: 'student',
@@ -158,6 +172,7 @@ export const mockAttendee: Attendee[] = [
     email: 'rosario_kessler79@hotmail.com',
     phoneNumber: null,
     rowVersion: 'AAAAAAABAdM=',
+    createdAt: '2026-01-02',
   },
   {
     $type: 'student',
@@ -168,6 +183,7 @@ export const mockAttendee: Attendee[] = [
     email: 'paolo55@gmail.com',
     phoneNumber: null,
     rowVersion: 'AAAAAAABAdk=',
+    createdAt: '2026-01-02',
   },
   {
     $type: 'student',
@@ -178,6 +194,7 @@ export const mockAttendee: Attendee[] = [
     email: 'winnifred.hoeger31@yahoo.com',
     phoneNumber: null,
     rowVersion: 'AAAAAAABAdU=',
+    createdAt: '2026-01-02',
   },
   {
     $type: 'student',
@@ -188,6 +205,7 @@ export const mockAttendee: Attendee[] = [
     email: 'etha_greenfelder@yahoo.com',
     phoneNumber: null,
     rowVersion: 'AAAAAAABAdY=',
+    createdAt: '2026-01-02',
   },
   {
     $type: 'student',
@@ -198,6 +216,7 @@ export const mockAttendee: Attendee[] = [
     email: 'kelsie.skiles@hotmail.com',
     phoneNumber: null,
     rowVersion: 'AAAAAAABAd0=',
+    createdAt: '2026-01-02',
   },
   {
     $type: 'student',
@@ -208,6 +227,7 @@ export const mockAttendee: Attendee[] = [
     email: 'bella.grant@gmail.com',
     phoneNumber: null,
     rowVersion: 'AAAAAAABAdg=',
+    createdAt: '2026-01-02',
   },
 ];
 
@@ -496,5 +516,106 @@ export const mockCourse: Course[] = [
     courseDescription:
       'A course in National with focus on reintermediate user-centric users.',
     rowVersion: 'AAAAAAAAB9E=',
+  },
+];
+
+// MARK: Sessions
+
+export const mockSessions = [
+  {
+    id: 'b2c51815-2db8-4a67-885a-26d518c63ae5',
+    course: 'Markets',
+    courseCode: 'MAGRD-020',
+    location: 'Longview',
+    startDate: '2026-02-10T01:00:00+01:00',
+    endDate: '2026-03-10T01:00:00+01:00',
+    capacity: 1,
+    instructors: ['Amos Pfeffer'],
+    approvedEnrollmentsCount: 0,
+    rowVersion: 'AAAAAAABAfg=',
+  },
+  {
+    id: '2c69d9c0-cace-4a32-9b49-6030702bab26',
+    course: 'Markets',
+    courseCode: 'MAGRD-020',
+    location: 'Longview',
+    startDate: '2026-03-01T01:00:00+01:00',
+    endDate: '2026-04-14T02:00:00+02:00',
+    capacity: 1,
+    instructors: ['Amos Pfeffer'],
+    approvedEnrollmentsCount: 1,
+    rowVersion: 'AAAAAAABAfY=',
+  },
+  {
+    id: '5accedf0-bc8c-4373-84b0-904788b112e5',
+    course: 'Test',
+    courseCode: 'TEGRD-010',
+    location: 'Stockholm',
+    startDate: '2026-02-10T01:00:00+01:00',
+    endDate: '2026-02-15T01:00:00+01:00',
+    capacity: 1,
+    instructors: ['Jari L'],
+    approvedEnrollmentsCount: 1,
+    rowVersion: 'AAAAAAAARlI=',
+  },
+  {
+    id: '773cb8c6-0f53-4992-a287-bf5feeffbd03',
+    course: 'Markets',
+    courseCode: 'MAGRD-020',
+    location: 'Longview',
+    startDate: '2026-02-10T21:33:22.648+01:00',
+    endDate: '2026-03-10T21:33:22.648+01:00',
+    capacity: 1,
+    instructors: ['Amos Pfeffer'],
+    approvedEnrollmentsCount: 0,
+    rowVersion: 'AAAAAAABAfc=',
+  },
+  {
+    id: '9a354570-d64c-4538-a19e-c76a57e24a8f',
+    course: 'Test',
+    courseCode: 'TEGRD-010',
+    location: 'Stockholm',
+    startDate: '2026-02-10T01:00:00+01:00',
+    endDate: '2026-02-15T01:00:00+01:00',
+    capacity: 1,
+    instructors: ['Jari L'],
+    approvedEnrollmentsCount: 0,
+    rowVersion: 'AAAAAAAAB9Y=',
+  },
+  {
+    id: 'fb7d257a-a5ad-4e20-b565-fc4e3d685521',
+    course: 'Test',
+    courseCode: 'TEGRD-010',
+    location: 'Stockholm',
+    startDate: '2026-02-10T01:00:00+01:00',
+    endDate: '2026-02-15T01:00:00+01:00',
+    capacity: 1,
+    instructors: ['Jari L', 'Linda L'],
+    approvedEnrollmentsCount: 0,
+    rowVersion: 'AAAAAAAAB9c=',
+  },
+  {
+    id: 'fb7d257a-a5ad-4e20-b565-fc4e3d685521',
+    course: 'Test',
+    courseCode: 'TEGRD-010',
+    location: 'Stockholm',
+    startDate: '2026-02-10T01:00:00+01:00',
+    endDate: '2026-02-15T01:00:00+01:00',
+    capacity: 1,
+    instructors: ['Jari L'],
+    approvedEnrollmentsCount: 0,
+    rowVersion: 'AAAAAAAAB9c=',
+  },
+  {
+    id: 'fb7d257a-a5ad-4e20-b565-fc4e3d685521',
+    course: 'Test',
+    courseCode: 'TEGRD-010',
+    location: 'Stockholm',
+    startDate: '2026-02-10T01:00:00+01:00',
+    endDate: '2026-02-15T01:00:00+01:00',
+    capacity: 1,
+    instructors: ['Jari L'],
+    approvedEnrollmentsCount: 0,
+    rowVersion: 'AAAAAAAAB9c=',
   },
 ];

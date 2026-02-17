@@ -13,7 +13,7 @@ import { links } from '@/utils/links';
 const NavMenu = () => {
   return (
     <div>
-      <Menubar>
+      {/* <Menubar>
         <MenubarMenu>
           <MenubarTrigger>Navigate</MenubarTrigger>
           <MenubarContent>
@@ -28,7 +28,8 @@ const NavMenu = () => {
             </MenubarGroup>
           </MenubarContent>
         </MenubarMenu>
-      </Menubar>
+      </Menubar> */}
+      Test
     </div>
   );
 };

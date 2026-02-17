@@ -19,6 +19,7 @@ export type Attendee = {
   role: AttendeeRole;
   rowVersion: string;
   competences?: Competence[];
+  createdAt: string;
 };
 
 export type Course = {
@@ -34,5 +35,33 @@ export type Course = {
 export type Location = {
   id: string;
   locationName: string;
+  rowVersion: string;
+};
+
+export type Instructor = Pick<Attendee, 'id' | 'firstName' | 'lastName'>;
+
+// export type CourseSession = {
+//   id: string;
+//   course: string;
+//   courseCode: string;
+//   location: string;
+//   startDate: string;
+//   endDate: string;
+//   capacity: number;
+//   instructors: string[];
+//   approvedEnrollmentsCount: number;
+//   rowVersion: string;
+// };
+
+export type CourseSession = {
+  id: string;
+  course: Course;
+  courseCode: string;
+  location: Location;
+  startDate: string;
+  endDate: string;
+  capacity: number;
+  instructors: Attendee[];
+  approvedEnrollmentsCount: number;
   rowVersion: string;
 };
