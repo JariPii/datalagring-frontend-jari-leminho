@@ -40,39 +40,11 @@ const StudentsTable = () => {
         <TableCaption>Students</TableCaption>
         <TableHeader>
           <TableRow>
-            {/* <SortTableHead<Attendee, SortableAttendeeKey>
-              label='Firstname'
-              column='firstName'
-              sortKey={sortKey}
-              sortDir={sortDir}
-              onSort={handleSort}
-            />
-            <SortTableHead<Attendee, SortableAttendeeKey>
-              label='Lastname'
-              column='lastName'
-              sortKey={sortKey}
-              sortDir={sortDir}
-              onSort={handleSort}
-            />
-            <SortTableHead<Attendee, SortableAttendeeKey>
-              label='Email'
-              column='email'
-              sortKey={sortKey}
-              sortDir={sortDir}
-              onSort={handleSort}
-            /> */}
             <TableHead>Firstname</TableHead>
             <TableHead>Lastname</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Phone Number</TableHead>
             <TableHead>Created At</TableHead>
-            {/* <SortTableHead<Attendee, SortableAttendeeKey>
-              label='Created'
-              column='createdAt'
-              sortKey={sortKey}
-              sortDir={sortDir}
-              onSort={handleSort}
-            /> */}
           </TableRow>
         </TableHeader>
         <TableBody>

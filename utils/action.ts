@@ -1,144 +1,119 @@
-import { error } from 'console';
 import {
   mockAttendee,
   mockCourse,
   mockLocation,
   mockSessions,
 } from './dummy-data';
-import { ApiError } from './types/api';
+import { ApiError, type ProblemDetails } from './types/api';
 import { Attendee, Course, CourseSession, Location } from './types/types';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const USE_MOCK_DATA = process.env.NEXT_PUBLIC_USE_MOCK === 'true';
 
-async function fetcher<T>(endpoint: string, options?: RequestInit): Promise<T> {
+function mockResponse<T>(endpoint: string): T {
+  if (endpoint.includes('/attendees/students')) {
+    return mockAttendee.filter((a) => a.role === 'Student') as T;
+  }
+
+  if (endpoint.includes('/attendees/instructors')) {
+    return mockAttendee.filter((a) => a.role === 'Instructor') as T;
+  }
+
+  if (endpoint.includes('/attendees')) {
+    return mockAttendee as T;
+  }
+
+  if (endpoint.includes('/courses')) {
+    return mockCourse as T;
+  }
+
+  if (endpoint.includes('/locations')) {
+    return mockLocation as T;
+  }
+
+  if (endpoint.includes('/courseSessions')) {
+    return mockSessions as T;
+  }
+
+  throw new Error(`No mock-data available for endpoint: ${endpoint}`);
+}
+
+async function apiFetch<T>(
+  endpoint: string,
+  options?: RequestInit,
+): Promise<T> {
   try {
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
+    const res = await fetch(`${BASE_URL}${endpoint}`, {
       ...options,
       headers: {
-        'Content-Type': 'application/json',
+        ...(options?.body ? { 'Content-Type': 'application/json' } : {}),
         ...options?.headers,
       },
+      signal: options?.signal,
     });
 
-    if (!response.ok) {
-      const errorBody: ApiError = await response.json().catch(() => ({}));
-      throw new Error(errorBody.message || `API Error: ${response.status}`);
+    if (!res.ok) {
+      const body = (await res
+        .json()
+        .catch(() => null)) as ProblemDetails | null;
+      throw new ApiError(body, res.status);
     }
 
-    return await response.json();
-  } catch (error) {
-    const isAbortError =
-      error instanceof DOMException && error.name === 'AbortError';
+    if (res.status === 204) return undefined as T;
 
-    if (isAbortError) {
-      throw error;
+    return (await res.json()) as T;
+  } catch (err) {
+    const isAbort = err instanceof DOMException && err.name === 'AbortError';
+    if (isAbort) throw err;
+
+    const isNetworkError = err instanceof TypeError;
+
+    if (USE_MOCK_DATA || isNetworkError) {
+      console.warn(`API not available (${endpoint}). Using MOCK-DATA.`);
+      return mockResponse<T>(endpoint);
     }
 
-    const isNetworkError = error instanceof TypeError;
-
-    // if (USE_MOCK_DATA) {
-    //   console.warn(
-    //     `API is not available (${endpoint}). Using MOCK-DATA instead.`,
-    //   );
-
-    //   if (endpoint.includes('/attendees/students')) {
-    //     return mockAttendee.filter((a) => a.role === 'Student') as T;
-    //   }
-
-    //   if (endpoint.includes('/attendees/instructors')) {
-    //     return mockAttendee.filter((a) => a.role === 'Instructor') as T;
-    //   }
-
-    //   if (endpoint.includes('/attendees')) {
-    //     return mockAttendee as T;
-    //   }
-
-    //   if (endpoint.includes('/courses')) {
-    //     return mockCourse as T;
-    //   }
-
-    //   if (endpoint.includes('/locations')) {
-    //     return mockLocation as T;
-    //   }
-
-    //   if (endpoint.includes('/courseSessions')) {
-    //     return mockSessions as T;
-    //   }
-
-    //   throw new Error(`No mock-data available on ${endpoint}`);
-    // }
-
-    if (isNetworkError || USE_MOCK_DATA) {
-      console.warn(
-        `API is not available (${endpoint}). Using MOCK-DATA instead.`,
-      );
-
-      if (endpoint.includes('/attendees/students')) {
-        return mockAttendee.filter((a) => a.role === 'Student') as T;
-      }
-
-      if (endpoint.includes('/attendees/instructors')) {
-        return mockAttendee.filter((a) => a.role === 'Instructor') as T;
-      }
-
-      if (endpoint.includes('/attendees')) {
-        return mockAttendee as T;
-      }
-
-      if (endpoint.includes('/courses')) {
-        return mockCourse as T;
-      }
-
-      if (endpoint.includes('/locations')) {
-        return mockLocation as T;
-      }
-
-      if (endpoint.includes('/courseSessions')) {
-        return mockSessions as T;
-      }
-
-      throw new Error(`No mock-data available on ${endpoint}`);
-    }
-
-    throw error;
+    throw err;
   }
 }
 
+// ---------------- Services ----------------
+
 export const attendeeService = {
-  getAll: (ct?: AbortSignal) =>
-    fetcher<Attendee[]>('/attendees', { signal: ct }),
+  getAll: (signal?: AbortSignal) =>
+    apiFetch<Attendee[]>('/attendees', { signal }),
 
-  getAllStudents: (ct?: AbortSignal) =>
-    fetcher<Attendee[]>('/attendees/students', { signal: ct }),
+  getAllStudents: (signal?: AbortSignal) =>
+    apiFetch<Attendee[]>('/attendees/students', { signal }),
 
-  getAllInstructors: (ct?: AbortSignal) =>
-    fetcher<Attendee[]>('/attendees/instructors', { signal: ct }),
+  getAllInstructors: (signal?: AbortSignal) =>
+    apiFetch<Attendee[]>('/attendees/instructors', { signal }),
 
-  getById: (id: string) => fetcher<Attendee>(`/attendees/${id}`),
+  getById: (id: string) => apiFetch<Attendee>(`/attendees/${id}`),
 
-  search: (searchTerm: string, ct?: AbortSignal) =>
-    fetcher<Attendee[]>(`/attendees/search?searchTerm=${searchTerm}`, {
-      signal: ct,
-    }),
+  search: (searchTerm: string, signal?: AbortSignal) =>
+    apiFetch<Attendee[]>(
+      `/attendees/search?searchTerm=${encodeURIComponent(searchTerm)}`,
+      { signal },
+    ),
 
   create: (data: unknown) =>
-    fetcher<Attendee>('/attendees', {
+    apiFetch<Attendee>('/attendees', {
       method: 'POST',
       body: JSON.stringify(data),
     }),
 };
 
 export const courseService = {
-  getAll: (ct?: AbortSignal) => fetcher<Course[]>('/courses', { signal: ct }),
+  getAll: (signal?: AbortSignal) => apiFetch<Course[]>('/courses', { signal }),
 };
 
 export const locationService = {
-  getAll: (ct?: AbortSignal) =>
-    fetcher<Location[]>('/locations', { signal: ct }),
+  getAll: (signal?: AbortSignal) =>
+    apiFetch<Location[]>('/locations', { signal }),
 };
 
 export const courseSessionsService = {
-  getAll: (ct?: AbortSignal) =>
-    fetcher<CourseSession[]>('/courseSessions', { signal: ct }),
+  getAll: (signal?: AbortSignal) =>
+    apiFetch<CourseSession[]>('/courseSessions', { signal }),
 };
