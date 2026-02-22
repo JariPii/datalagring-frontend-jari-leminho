@@ -1,3 +1,5 @@
+'use client';
+
 import { locationService } from '@/utils/action';
 import Link from 'next/link';
 import React from 'react';
@@ -10,10 +12,21 @@ import {
   TableBody,
   TableCell,
 } from '../ui/table';
-import { useQuery } from '@tanstack/react-query';
-import { Trash2, Edit } from 'lucide-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Trash2 } from 'lucide-react';
+import { Button } from '../ui/button';
+
+import CDialog from '@/components/dialog/CDialog';
+import { buildLocationEdit } from '@/components/forms/fieldBuilders';
+
+import type {
+  UpdateLocationDTO,
+  UpdateLocationFormValues,
+} from '@/utils/types/dto';
 
 const LocationsTable = () => {
+  const queryClient = useQueryClient();
+
   const {
     data: locations = [],
     isPending,
@@ -22,6 +35,14 @@ const LocationsTable = () => {
   } = useQuery({
     queryKey: ['locations'],
     queryFn: ({ signal }) => locationService.getAll(signal),
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, dto }: { id: string; dto: UpdateLocationDTO }) =>
+      locationService.update(id, dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['locations'] });
+    },
   });
 
   if (isPending) return <div>Loading...</div>;
@@ -42,20 +63,55 @@ const LocationsTable = () => {
             <TableHead>City</TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
-          {locations.map(({ id, locationName }) => (
-            <TableRow key={id}>
-              <TableCell className='text-center'>
-                <Link href={`/locations/${id}`}>{locationName}</Link>
-              </TableCell>
-              <TableCell className='flex gap-2'>
-                <Trash2 />
-                <Edit />
-              </TableCell>
-            </TableRow>
-          ))}
+          {locations.map((location) => {
+            const { fields, initialValues } = buildLocationEdit(location);
+
+            return (
+              <TableRow key={location.id}>
+                <TableCell className='text-center'>
+                  <Link href={`/locations/${location.id}`}>
+                    {location.locationName}
+                  </Link>
+                </TableCell>
+
+                <TableCell className='flex gap-2'>
+                  <Trash2 />
+
+                  <CDialog<UpdateLocationFormValues>
+                    title='Edit location'
+                    description='Change the city name and click save.'
+                    fields={fields}
+                    initialValues={initialValues}
+                    onSave={(values) => {
+                      console.log('ON_SAVE FIRED', values);
+                      const dto: UpdateLocationDTO = {
+                        rowVersion: values.rowVersion,
+                        locationName: values.locationName,
+                      };
+                      console.log('FRONTEND DTO', dto);
+                      updateMutation.mutate({ id: values.id, dto });
+                      console.log(values.rowVersion, values.locationName);
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
+
+      <Button>New Location</Button>
+
+      {updateMutation.isError ? (
+        <div className='mt-4'>
+          Error:{' '}
+          {updateMutation.error instanceof Error
+            ? updateMutation.error.message
+            : 'Unknown error'}
+        </div>
+      ) : null}
     </>
   );
 };

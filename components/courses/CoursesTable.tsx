@@ -1,3 +1,5 @@
+'use client';
+
 import { courseService } from '@/utils/action';
 import {
   Table,
@@ -10,10 +12,21 @@ import {
   TableRow,
 } from '../ui/table';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
-import { Edit, Trash2 } from 'lucide-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Trash2 } from 'lucide-react';
+import { Button } from '../ui/button';
+
+import CDialog from '@/components/dialog/CDialog';
+import { buildCourseEdit } from '@/components/forms/fieldBuilders';
+
+import type {
+  UpdateCourseDTO,
+  UpdateCourseFormValues,
+} from '@/utils/types/dto';
 
 const CoursesTable = () => {
+  const queryClient = useQueryClient();
+
   const {
     data: courses = [],
     isPending,
@@ -25,6 +38,14 @@ const CoursesTable = () => {
     refetchInterval: 5_000,
     refetchIntervalInBackground: true,
     staleTime: 0,
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, dto }: { id: string; dto: UpdateCourseDTO }) =>
+      courseService.update(id, dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['courses'] });
+    },
   });
 
   if (isPending) return <div>Loading</div>;
@@ -49,40 +70,66 @@ const CoursesTable = () => {
             <TableHead>Course Description</TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
-          {courses.map(
-            ({
-              id,
-              courseCode,
-              courseType,
-              courseTypeName,
-              courseName,
-              courseDescription,
-            }) => (
-              <TableRow key={id}>
+          {courses.map((course) => {
+            const { fields, initialValues } = buildCourseEdit(course);
+
+            return (
+              <TableRow key={course.id}>
                 <TableCell>
-                  <Link href={`/courses/${id}`}>{courseName}</Link>
+                  <Link href={`/courses/${course.id}`}>
+                    {course.courseName}
+                  </Link>
                 </TableCell>
                 <TableCell>
-                  <Link href={`/courses/${id}`}>{courseType}</Link>
+                  <Link href={`/courses/${course.id}`}>
+                    {String(course.courseType)}
+                  </Link>
                 </TableCell>
                 <TableCell>
-                  <Link href={`/courses/${id}`}>{courseTypeName}</Link>
+                  <Link href={`/courses/${course.id}`}>
+                    {String(course.courseTypeName)}
+                  </Link>
                 </TableCell>
                 <TableCell>
-                  <Link href={`/courses/${id}`}>{courseCode}</Link>
+                  <Link href={`/courses/${course.id}`}>
+                    {course.courseCode}
+                  </Link>
                 </TableCell>
                 <TableCell>
-                  <Link href={`/courses/${id}`}>{courseDescription}</Link>
+                  <Link href={`/courses/${course.id}`}>
+                    {course.courseDescription}
+                  </Link>
                 </TableCell>
+
                 <TableCell className='flex gap-2'>
                   <Trash2 />
-                  <Edit />
+
+                  <CDialog<UpdateCourseFormValues>
+                    title='Edit course'
+                    description="Edit the course fields. Click save when you're done."
+                    fields={fields}
+                    initialValues={initialValues}
+                    onSave={async (values) => {
+                      const dto: UpdateCourseDTO = {
+                        rowVersion: values.rowVersion,
+                        courseName: values.courseName,
+                        courseType: values.courseType,
+                        courseTypeName: values.courseTypeName,
+                        courseCode: values.courseCode,
+                        courseDescription: values.courseDescription,
+                      };
+
+                      await updateMutation.mutateAsync({ id: values.id, dto });
+                    }}
+                  />
                 </TableCell>
               </TableRow>
-            ),
-          )}
+            );
+          })}
         </TableBody>
+
         <TableFooter>
           <TableRow>
             <TableCell colSpan={5} className='text-center'>
@@ -91,6 +138,17 @@ const CoursesTable = () => {
           </TableRow>
         </TableFooter>
       </Table>
+
+      <Button>Test2</Button>
+
+      {updateMutation.isError ? (
+        <div className='mt-4'>
+          Update error:{' '}
+          {updateMutation.error instanceof Error
+            ? updateMutation.error.message
+            : 'Unknown error'}
+        </div>
+      ) : null}
     </>
   );
 };

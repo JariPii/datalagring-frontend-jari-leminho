@@ -40,19 +40,6 @@ export type Location = {
 
 export type Instructor = Pick<Attendee, 'id' | 'firstName' | 'lastName'>;
 
-// export type CourseSession = {
-//   id: string;
-//   course: string;
-//   courseCode: string;
-//   location: string;
-//   startDate: string;
-//   endDate: string;
-//   capacity: number;
-//   instructors: string[];
-//   approvedEnrollmentsCount: number;
-//   rowVersion: string;
-// };
-
 export type CourseSession = {
   id: string;
   course: Course;
@@ -64,4 +51,12 @@ export type CourseSession = {
   instructors: Attendee[];
   approvedEnrollmentsCount: number;
   rowVersion: string;
+};
+
+export type UpdateAttendeeDTO = {
+  rowVersion: string;
+  email?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  phoneNumber?: string | null;
 };

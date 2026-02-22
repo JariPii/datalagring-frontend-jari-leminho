@@ -11,10 +11,21 @@ import {
   TableRow,
 } from '../ui/table';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
-import { Trash2, Edit } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Trash2 } from 'lucide-react';
+import CButton from '../Button/CButton';
+
+import CDialog from '@/components/dialog/CDialog';
+import { buildAttendeeEdit } from '@/components/forms/fieldBuilders';
+
+import type {
+  UpdateAttendeeDTO,
+  UpdateAttendeeFormValues,
+} from '@/utils/types/dto';
 
 const StudentsTable = () => {
+  const queryClient = useQueryClient();
+
   const {
     data: students = [],
     isPending,
@@ -23,6 +34,14 @@ const StudentsTable = () => {
   } = useQuery({
     queryKey: ['attendees', 'students'],
     queryFn: ({ signal }) => attendeeService.getAllStudents(signal),
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, dto }: { id: string; dto: UpdateAttendeeDTO }) =>
+      attendeeService.update(id, dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['attendees', 'students'] });
+    },
   });
 
   if (isPending) return <div>Loading...</div>;
@@ -35,7 +54,7 @@ const StudentsTable = () => {
     );
 
   return (
-    <>
+    <div>
       <Table>
         <TableCaption>Students</TableCaption>
         <TableHeader>
@@ -47,35 +66,77 @@ const StudentsTable = () => {
             <TableHead>Created At</TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
-          {students.map(
-            ({ id, firstName, lastName, email, phoneNumber, createdAt }) => (
-              <TableRow key={id}>
+          {students.map((student) => {
+            const { fields, initialValues } = buildAttendeeEdit(student);
+
+            return (
+              <TableRow key={student.id}>
                 <TableCell>
-                  <Link href={`/attendees/${id}`}>{firstName}</Link>
+                  <Link href={`/attendees/${student.id}`}>
+                    {student.firstName}
+                  </Link>
                 </TableCell>
                 <TableCell>
-                  <Link href={`/attendees/${id}`}>{lastName}</Link>
+                  <Link href={`/attendees/${student.id}`}>
+                    {student.lastName}
+                  </Link>
                 </TableCell>
                 <TableCell>
-                  <Link href={`/attendees/${id}`}>{email}</Link>
+                  <Link href={`/attendees/${student.id}`}>{student.email}</Link>
                 </TableCell>
                 <TableCell>
-                  <Link href={`/attendees/${id}`}>{phoneNumber}</Link>
+                  <Link href={`/attendees/${student.id}`}>
+                    {student.phoneNumber}
+                  </Link>
                 </TableCell>
                 <TableCell>
-                  {new Date(createdAt).toLocaleString('sv-SE')}
+                  {new Date(student.createdAt).toLocaleString('sv-SE')}
                 </TableCell>
+
                 <TableCell className='flex gap-2'>
                   <Trash2 />
-                  <Edit />
+
+                  <CDialog<UpdateAttendeeFormValues>
+                    title='Edit student'
+                    description="Make changes to the student. Click save when you're done."
+                    fields={fields}
+                    initialValues={initialValues}
+                    onSave={(values) => {
+                      const dto: UpdateAttendeeDTO = {
+                        rowVersion: values.rowVersion,
+                        firstName: values.firstName,
+                        lastName: values.lastName,
+                        email: values.email,
+                        phoneNumber: values.phoneNumber.trim()
+                          ? values.phoneNumber
+                          : null,
+                      };
+
+                      updateMutation.mutate({ id: values.id, dto });
+                    }}
+                  />
                 </TableCell>
               </TableRow>
-            ),
-          )}
+            );
+          })}
         </TableBody>
       </Table>
-    </>
+
+      <div className='w-full flex justify-end px-4'>
+        <CButton>New Student</CButton>
+      </div>
+
+      {updateMutation.isError ? (
+        <div className='mt-4'>
+          Error:{' '}
+          {updateMutation.error instanceof Error
+            ? updateMutation.error.message
+            : 'Unknown error'}
+        </div>
+      ) : null}
+    </div>
   );
 };
 

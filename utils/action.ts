@@ -102,15 +102,33 @@ export const attendeeService = {
       method: 'POST',
       body: JSON.stringify(data),
     }),
+
+  update: (id: string, data: unknown) =>
+    apiFetch<Attendee>(`/attendees/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
 };
 
 export const courseService = {
   getAll: (signal?: AbortSignal) => apiFetch<Course[]>('/courses', { signal }),
+
+  update: (id: string, data: unknown) =>
+    apiFetch<Course>(`/courses/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
 };
 
 export const locationService = {
   getAll: (signal?: AbortSignal) =>
     apiFetch<Location[]>('/locations', { signal }),
+
+  update: (id: string, data: unknown) =>
+    apiFetch<Location>(`/locations/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
 };
 
 export const courseSessionsService = {

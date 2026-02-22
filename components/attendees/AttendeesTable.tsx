@@ -12,6 +12,7 @@ import {
 import Link from 'next/link';
 import { serverFetcher } from '@/utils/fetcher.server';
 import { Attendee } from '@/utils/types/types';
+import { Button } from '../ui/button';
 
 const AttendeesTable = async () => {
   // const attendees = await attendeeService.getAll();
@@ -56,6 +57,7 @@ const AttendeesTable = async () => {
           </TableRow>
         </TableFooter>
       </Table>
+      <Button>Test</Button>
     </div>
   );
 };
