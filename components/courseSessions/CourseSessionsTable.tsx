@@ -1,5 +1,6 @@
-import { courseSessionsService } from '@/utils/action';
-import React from 'react';
+'use client';
+
+import { courseSessionService } from '@/utils/action';
 import {
   Table,
   TableBody,
@@ -11,7 +12,10 @@ import {
 } from '../ui/table';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { Trash2, Edit } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+
+import CreateCourseSessionDialog from './CreateCourseSessionDialog';
+import EditCourseSessionDialog from './EditCourseSessionDialog';
 
 const CourseSessionsTable = () => {
   const {
@@ -21,7 +25,7 @@ const CourseSessionsTable = () => {
     error,
   } = useQuery({
     queryKey: ['courseSessions'],
-    queryFn: ({ signal }) => courseSessionsService.getAll(signal),
+    queryFn: ({ signal }) => courseSessionService.getAll(signal),
   });
 
   if (isPending) return <div>Loading...</div>;
@@ -34,9 +38,9 @@ const CourseSessionsTable = () => {
     );
 
   return (
-    <>
+    <div>
       <Table>
-        <TableCaption>Students</TableCaption>
+        <TableCaption>Course Sessions</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Course</TableHead>
@@ -46,63 +50,60 @@ const CourseSessionsTable = () => {
             <TableHead>Location</TableHead>
             <TableHead>Instructors</TableHead>
             <TableHead>Capacity</TableHead>
-            <TableHead>Approved studends</TableHead>
+            <TableHead>Approved students</TableHead>
+            <TableHead />
           </TableRow>
         </TableHeader>
+
         <TableBody>
-          {courseSessions.map(
-            ({
-              id,
-              course: { id: courseId, courseName },
-              courseCode,
-              startDate,
-              endDate,
-              location: { id: locationId, locationName },
-              instructors,
-              capacity,
-              approvedEnrollmentsCount,
-            }) => (
-              <TableRow key={id}>
-                <TableCell>
-                  <Link href={`/courses/${courseId}`}>{courseName}</Link>
-                </TableCell>
-                <TableCell>
-                  <Link href={''}>{courseCode}</Link>
-                </TableCell>
-                <TableCell>
-                  <Link href={''}>{startDate}</Link>
-                </TableCell>
-                <TableCell>
-                  <Link href={''}>{endDate}</Link>
-                </TableCell>
-                <TableCell>
-                  <Link href={''}>{locationName}</Link>
-                </TableCell>
-                <TableCell>
-                  {instructors.map(({ id, firstName, lastName }) => (
-                    <div key={id}>
-                      <Link href={`/attendees/${id}`} className='my-1'>
-                        {firstName} {lastName}
-                      </Link>
-                    </div>
-                  ))}
-                </TableCell>
-                <TableCell>
-                  <Link href={''}>{capacity}</Link>
-                </TableCell>
-                <TableCell>
-                  <Link href={''}>{approvedEnrollmentsCount}</Link>
-                </TableCell>
-                <TableCell className='flex gap-3'>
-                  <Trash2 />
-                  <Edit />
-                </TableCell>
-              </TableRow>
-            ),
-          )}
+          {courseSessions.map((session) => (
+            <TableRow key={session.id}>
+              <TableCell>
+                <Link href={`/courses/${session.course.id}`}>
+                  {session.course.courseName}
+                </Link>
+              </TableCell>
+
+              <TableCell>{session.courseCode}</TableCell>
+
+              <TableCell>
+                {new Date(session.startDate).toLocaleString('sv-SE')}
+              </TableCell>
+
+              <TableCell>
+                {new Date(session.endDate).toLocaleString('sv-SE')}
+              </TableCell>
+
+              <TableCell>{session.location.locationName}</TableCell>
+
+              <TableCell>
+                {session.instructors.map(({ id, firstName, lastName }) => (
+                  <div key={id} className='my-1'>
+                    <Link href={`/attendees/${id}`}>
+                      {firstName} {lastName}
+                    </Link>
+                  </div>
+                ))}
+              </TableCell>
+
+              <TableCell>{session.capacity}</TableCell>
+
+              <TableCell>{session.approvedEnrollmentsCount}</TableCell>
+
+              <TableCell className='flex gap-3'>
+                <Trash2 />
+                {/* ✅ skicka HELA session */}
+                <EditCourseSessionDialog session={session} />
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
-    </>
+
+      <div className='flex justify-end mt-4'>
+        <CreateCourseSessionDialog triggerText='New Course Session' />
+      </div>
+    </div>
   );
 };
 

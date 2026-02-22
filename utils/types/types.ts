@@ -1,6 +1,6 @@
 export type AttendeeRole = 'Student' | 'Instructor';
-export type CourseType = 'GRD' | 'FDJ';
-export type CourseTypeName = 'Grundkurs' | 'Försdjupningskurs';
+export type CourseType = 'BAS' | 'INT' | 'ADV' | 'EXP';
+export type CourseTypeName = 'Basic' | 'Intermediate' | 'Advanced' | 'Expert';
 
 export type Competence = {
   id: string;

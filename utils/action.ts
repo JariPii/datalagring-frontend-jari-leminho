@@ -5,6 +5,7 @@ import {
   mockSessions,
 } from './dummy-data';
 import { ApiError, type ProblemDetails } from './types/api';
+import { UpdateCourseSessionDTO } from './types/dto';
 import { Attendee, Course, CourseSession, Location } from './types/types';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -113,6 +114,12 @@ export const attendeeService = {
 export const courseService = {
   getAll: (signal?: AbortSignal) => apiFetch<Course[]>('/courses', { signal }),
 
+  create: (data: unknown) =>
+    apiFetch<Course>('/courses', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
   update: (id: string, data: unknown) =>
     apiFetch<Course>(`/courses/${id}`, {
       method: 'PATCH',
@@ -131,7 +138,19 @@ export const locationService = {
     }),
 };
 
-export const courseSessionsService = {
+export const courseSessionService = {
   getAll: (signal?: AbortSignal) =>
     apiFetch<CourseSession[]>('/courseSessions', { signal }),
+
+  create: (data: unknown) =>
+    apiFetch('/courseSessions', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  update: (id: string, data: UpdateCourseSessionDTO) =>
+    apiFetch<CourseSession>(`/courseSessions/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    }),
 };

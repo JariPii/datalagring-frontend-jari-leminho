@@ -19,6 +19,7 @@ import { Button } from '../ui/button';
 import CDialog from '@/components/dialog/CDialog';
 import { buildCourseEdit } from '@/components/forms/fieldBuilders';
 
+import CreateCourseDialog from './CreateCourseDialog';
 import type {
   UpdateCourseDTO,
   UpdateCourseFormValues,
@@ -89,7 +90,7 @@ const CoursesTable = () => {
                 </TableCell>
                 <TableCell>
                   <Link href={`/courses/${course.id}`}>
-                    {String(course.courseTypeName)}
+                    {course.courseTypeName}
                   </Link>
                 </TableCell>
                 <TableCell>
@@ -108,17 +109,16 @@ const CoursesTable = () => {
 
                   <CDialog<UpdateCourseFormValues>
                     title='Edit course'
-                    description="Edit the course fields. Click save when you're done."
+                    description="Edit the course. Click save when you're done."
                     fields={fields}
                     initialValues={initialValues}
                     onSave={async (values) => {
                       const dto: UpdateCourseDTO = {
                         rowVersion: values.rowVersion,
                         courseName: values.courseName,
-                        courseType: values.courseType,
-                        courseTypeName: values.courseTypeName,
                         courseCode: values.courseCode,
                         courseDescription: values.courseDescription,
+                        courseType: values.courseType,
                       };
 
                       await updateMutation.mutateAsync({ id: values.id, dto });
@@ -139,7 +139,7 @@ const CoursesTable = () => {
         </TableFooter>
       </Table>
 
-      <Button>Test2</Button>
+      <CreateCourseDialog trigger={<Button>Add course</Button>} />
 
       {updateMutation.isError ? (
         <div className='mt-4'>

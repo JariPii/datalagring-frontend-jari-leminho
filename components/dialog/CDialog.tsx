@@ -19,6 +19,7 @@ type Props<TValues extends Record<string, string>> = {
   fields: Array<FormField<Extract<keyof TValues, string>>>;
   initialValues: TValues;
   onSave: (values: TValues) => void;
+  trigger?: React.ReactNode;
 };
 
 const CDialog = <TValues extends Record<string, string>>({
@@ -27,13 +28,18 @@ const CDialog = <TValues extends Record<string, string>>({
   fields,
   initialValues,
   onSave,
+  trigger,
 }: Props<TValues>) => {
   const [open, setOpen] = React.useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Edit className='cursor-pointer' />
+        {trigger ? (
+          <span className='cursor-pointer'>{trigger}</span>
+        ) : (
+          <Edit className='cursor-pointer' />
+        )}
       </DialogTrigger>
 
       <DialogContent className='sm:max-w-[425px]'>
