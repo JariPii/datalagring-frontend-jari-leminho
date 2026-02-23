@@ -13,7 +13,6 @@ import {
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Trash2 } from 'lucide-react';
-import CButton from '../Button/CButton';
 
 import CDialog from '@/components/dialog/CDialog';
 import { buildAttendeeEdit } from '@/components/forms/fieldBuilders';
