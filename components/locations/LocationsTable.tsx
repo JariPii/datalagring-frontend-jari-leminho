@@ -2,7 +2,6 @@
 
 import { locationService } from '@/utils/action';
 import Link from 'next/link';
-import React from 'react';
 import {
   Table,
   TableCaption,
@@ -14,7 +13,6 @@ import {
 } from '../ui/table';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Trash2 } from 'lucide-react';
-import { Button } from '../ui/button';
 
 import CDialog from '@/components/dialog/CDialog';
 import { buildLocationEdit } from '@/components/forms/fieldBuilders';
@@ -23,6 +21,7 @@ import type {
   UpdateLocationDTO,
   UpdateLocationFormValues,
 } from '@/utils/types/dto';
+import CreateLocationDialog from './CreateLocationDialog';
 
 const LocationsTable = () => {
   const queryClient = useQueryClient();
@@ -102,7 +101,9 @@ const LocationsTable = () => {
         </TableBody>
       </Table>
 
-      <Button>New Location</Button>
+      <div className='flex justify-end mt-4'>
+        <CreateLocationDialog />
+      </div>
 
       {updateMutation.isError ? (
         <div className='mt-4'>

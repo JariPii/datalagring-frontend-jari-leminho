@@ -131,6 +131,12 @@ export const locationService = {
   getAll: (signal?: AbortSignal) =>
     apiFetch<Location[]>('/locations', { signal }),
 
+  create: (data: unknown) =>
+    apiFetch<Location>('/locations', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
   update: (id: string, data: unknown) =>
     apiFetch<Location>(`/locations/${id}`, {
       method: 'PATCH',

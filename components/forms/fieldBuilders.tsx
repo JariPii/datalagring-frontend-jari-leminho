@@ -13,6 +13,7 @@ import type {
   CreateCourseFormValues,
   CreateCourseSessionFormValues,
   UpdateCourseSessionFormValues,
+  CreateLocationFormValues,
 } from '@/utils/types/dto';
 
 const buildAttendeeEdit = (
@@ -63,6 +64,21 @@ const buildLocationEdit = (
     id: l.id,
     rowVersion: l.rowVersion,
     locationName: l.locationName,
+  };
+
+  return { fields, initialValues };
+};
+
+const buildLocationCreate = (): {
+  fields: Array<FormField<Extract<keyof CreateLocationFormValues, string>>>;
+  initialValues: CreateLocationFormValues;
+} => {
+  const fields: Array<
+    FormField<Extract<keyof CreateLocationFormValues, string>>
+  > = [{ name: 'locationName', label: 'City', required: true }];
+
+  const initialValues: CreateLocationFormValues = {
+    locationName: '',
   };
 
   return { fields, initialValues };
@@ -336,6 +352,7 @@ const buildCourseSessionEdit = (
 export {
   buildAttendeeEdit,
   buildLocationEdit,
+  buildLocationCreate,
   buildCourseEdit,
   buildCourseSessionEdit,
   buildCourseCreate,

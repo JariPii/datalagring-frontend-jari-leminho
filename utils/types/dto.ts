@@ -28,6 +28,14 @@ export type UpdateLocationFormValues = {
   locationName: string;
 };
 
+export type CreateLocationDTO = {
+  locationName: string;
+};
+
+export type CreateLocationFormValues = {
+  locationName: string;
+};
+
 export type UpdateCourseDTO = {
   rowVersion: string;
   courseCode?: string | null;
