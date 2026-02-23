@@ -25,6 +25,7 @@ import type {
 import CreateInstructorDialog from './CreateInstructorDialog';
 import { toast } from 'sonner';
 import AddCompetenceDialog from './AddCompetenceDialog';
+import InstructorInfoDialog from './InstructorInfoDialog';
 
 const InstructorsTable = () => {
   const queryClient = useQueryClient();
@@ -148,6 +149,10 @@ const InstructorsTable = () => {
                   <AddCompetenceDialog
                     instructorId={instructor.id}
                     rowVersion={instructor.rowVersion}
+                  />
+                  <InstructorInfoDialog
+                    instructorId={instructor.id}
+                    triggerText='View'
                   />
                 </TableCell>
               </TableRow>

@@ -2,14 +2,13 @@
 
 import React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
 import CDialog from '@/components/dialog/CDialog';
 import { buildAddCompetenceToInstructor } from '@/components/forms/fieldBuilders';
 
-import { attendeeService } from '@/utils/action';
-import { competenceService } from '@/utils/action'; // om du lade den där, annars korrekt import
+import { attendeeService, competenceService } from '@/utils/action';
 import type { Competence } from '@/utils/types/types';
 import type {
   AddCompetenceDTO,
@@ -36,17 +35,15 @@ const AddCompetenceDialog = ({ instructorId, rowVersion }: Props) => {
   );
 
   const addMutation = useMutation({
-    mutationFn: (p: { instructorId: string; dto: AddCompetenceDTO }) =>
-      attendeeService.addCompetence(p.instructorId, p.dto),
+    mutationFn: (p: { id: string; dto: AddCompetenceDTO }) =>
+      attendeeService.addCompetenceToInstructor(p.id, p.dto),
     onSuccess: async () => {
-      // refresh instructors list so you see updated competences
       await queryClient.invalidateQueries({
         queryKey: ['attendees', 'instructors'],
       });
-      toast.success('Competence added');
-    },
-    onError: (e) => {
-      toast.error(e instanceof Error ? e.message : 'Failed to add competence');
+      await queryClient.invalidateQueries({
+        queryKey: ['attendees', 'students'],
+      }); // valfritt
     },
   });
 
@@ -63,14 +60,13 @@ const AddCompetenceDialog = ({ instructorId, rowVersion }: Props) => {
           rowVersion: values.rowVersion,
         };
 
-        // toast.promise om du vill ha loading också:
         await toast.promise(
-          addMutation.mutateAsync({ instructorId: values.instructorId, dto }),
+          addMutation.mutateAsync({ id: values.instructorId, dto }),
           {
             loading: 'Adding competence...',
             success: 'Competence added',
-            error: (err) =>
-              err instanceof Error ? err.message : 'Failed to add competence',
+            error: (e) =>
+              e instanceof Error ? e.message : 'Failed to add competence',
           },
         );
       }}

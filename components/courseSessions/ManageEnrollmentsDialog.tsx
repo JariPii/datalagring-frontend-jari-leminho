@@ -80,7 +80,7 @@ const ManageEnrollmentsDialog = ({ courseSessionId, rowVersion }: Props) => {
         <Button variant='outline'>Enrollments</Button>
       </DialogTrigger>
 
-      <DialogContent className='sm:max-w-[640px]'>
+      <DialogContent className='sm:max-w-160'>
         <DialogHeader>
           <DialogTitle>Manage enrollments</DialogTitle>
           <DialogDescription>

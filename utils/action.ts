@@ -108,14 +108,19 @@ export const attendeeService = {
 
   getById: (id: string) => apiFetch<Attendee>(`/attendees/${id}`),
 
-  search: (searchTerm: string, signal?: AbortSignal) =>
-    apiFetch<Attendee[]>(
-      `/attendees/search?searchTerm=${encodeURIComponent(searchTerm)}`,
+  search: (q: string, signal?: AbortSignal) =>
+    apiFetch<Attendee[]>(`/attendees/search?q=${encodeURIComponent(q)}`, {
+      signal,
+    }),
+
+  getByEmail: (email: string, signal?: AbortSignal) =>
+    apiFetch<Attendee>(
+      `/attendees/by-email?email=${encodeURIComponent(email)}`,
       { signal },
     ),
 
-  addCompetence: (instructorId: string, dto: AddCompetenceDTO) =>
-    apiFetch<{ message: string }>(`/attendees/${instructorId}/competences`, {
+  addCompetenceToInstructor: (id: string, dto: AddCompetenceDTO) =>
+    apiFetch<{ message: string }>(`/attendees/${id}/competences`, {
       method: 'POST',
       body: JSON.stringify(dto),
     }),
