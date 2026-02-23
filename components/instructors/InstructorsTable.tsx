@@ -22,6 +22,7 @@ import type {
   UpdateAttendeeDTO,
   UpdateAttendeeFormValues,
 } from '@/utils/types/dto';
+import CreateInstructorDialog from './CreateInstructorDialog';
 
 const InstructorsTable = () => {
   const queryClient = useQueryClient();
@@ -124,6 +125,10 @@ const InstructorsTable = () => {
           })}
         </TableBody>
       </Table>
+
+      <div className='w-full flex justify-end px-4'>
+        <CreateInstructorDialog />
+      </div>
 
       {updateMutation.isError ? (
         <div className='mt-4'>

@@ -14,6 +14,7 @@ import type {
   CreateCourseSessionFormValues,
   UpdateCourseSessionFormValues,
   CreateLocationFormValues,
+  CreateStudentFormValues,
 } from '@/utils/types/dto';
 
 const buildAttendeeEdit = (
@@ -41,6 +42,52 @@ const buildAttendeeEdit = (
     lastName: a.lastName,
     email: a.email ?? '',
     phoneNumber: a.phoneNumber ?? '',
+  };
+
+  return { fields, initialValues };
+};
+
+const buildStudentCreate = (): {
+  fields: Array<FormField<Extract<keyof CreateStudentFormValues, string>>>;
+  initialValues: CreateStudentFormValues;
+} => {
+  const fields: Array<
+    FormField<Extract<keyof CreateStudentFormValues, string>>
+  > = [
+    { name: 'firstName', label: 'Firstname', required: true },
+    { name: 'lastName', label: 'Lastname', required: true },
+    { name: 'email', label: 'Email', required: true },
+    { name: 'phoneNumber', label: 'Phone Number' },
+  ];
+
+  const initialValues: CreateStudentFormValues = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+  };
+
+  return { fields, initialValues };
+};
+
+const buildInstructorCreate = (): {
+  fields: Array<FormField<Extract<keyof CreateStudentFormValues, string>>>;
+  initialValues: CreateStudentFormValues;
+} => {
+  const fields: Array<
+    FormField<Extract<keyof CreateStudentFormValues, string>>
+  > = [
+    { name: 'firstName', label: 'Firstname', required: true },
+    { name: 'lastName', label: 'Lastname', required: true },
+    { name: 'email', label: 'Email', required: true },
+    { name: 'phoneNumber', label: 'Phone Number' },
+  ];
+
+  const initialValues: CreateStudentFormValues = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
   };
 
   return { fields, initialValues };
@@ -99,10 +146,8 @@ const buildCourseEdit = (
     { name: 'courseName', label: 'Course', required: true },
     { name: 'courseCode', label: 'Course Code', required: true },
 
-    // courseType = enum (lägg som input nu, senare Select)
     { name: 'courseType', label: 'Course Type', required: true },
 
-    // visa men låt inte editas (ofta beräknad)
     { name: 'courseTypeName', label: 'Course Type Name', readOnly: true },
 
     { name: 'courseDescription', label: 'Course Description' },
@@ -351,6 +396,8 @@ const buildCourseSessionEdit = (
 
 export {
   buildAttendeeEdit,
+  buildStudentCreate,
+  buildInstructorCreate,
   buildLocationEdit,
   buildLocationCreate,
   buildCourseEdit,

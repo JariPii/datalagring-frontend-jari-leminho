@@ -22,6 +22,7 @@ import type {
   UpdateAttendeeDTO,
   UpdateAttendeeFormValues,
 } from '@/utils/types/dto';
+import CreateStudentDialog from './CreateStudentDialog';
 
 const StudentsTable = () => {
   const queryClient = useQueryClient();
@@ -125,7 +126,7 @@ const StudentsTable = () => {
       </Table>
 
       <div className='w-full flex justify-end px-4'>
-        <CButton>New Student</CButton>
+        <CreateStudentDialog />
       </div>
 
       {updateMutation.isError ? (

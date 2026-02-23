@@ -1,4 +1,4 @@
-import { CourseType } from './types';
+import { AttendeeRole, CourseType } from './types';
 
 export type UpdateAttendeeDTO = {
   rowVersion: string;
@@ -11,6 +11,28 @@ export type UpdateAttendeeDTO = {
 export type UpdateAttendeeFormValues = {
   id: string;
   rowVersion: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+};
+
+export type CreateAttendeeDTO = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber?: string | null;
+  role: AttendeeRole;
+};
+
+export type CreateStudentFormValues = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+};
+
+export type CreateInstructorFormValues = {
   email: string;
   firstName: string;
   lastName: string;
