@@ -4,6 +4,7 @@ import type {
   Course,
   CourseType,
   CourseSession,
+  Competence,
 } from '@/utils/types/types'; // ändra om din path är annan
 import type { FormField } from './DynamicForm';
 import type {
@@ -15,7 +16,12 @@ import type {
   UpdateCourseSessionFormValues,
   CreateLocationFormValues,
   CreateStudentFormValues,
+  EnrollStudentToSessionFormValues,
+  AddCompetenceFormValues,
+  CreateCompetenceFormValues,
+  UpdateCompetenceFormValues,
 } from '@/utils/types/dto';
+import { faker } from '@faker-js/faker';
 
 const buildAttendeeEdit = (
   a: Attendee,
@@ -47,7 +53,67 @@ const buildAttendeeEdit = (
   return { fields, initialValues };
 };
 
+// const buildStudentCreate = (): {
+//   fields: Array<FormField<Extract<keyof CreateStudentFormValues, string>>>;
+//   initialValues: CreateStudentFormValues;
+// } => {
+//   const fields: Array<
+//     FormField<Extract<keyof CreateStudentFormValues, string>>
+//   > = [
+//     { name: 'firstName', label: 'Firstname', required: true },
+//     { name: 'lastName', label: 'Lastname', required: true },
+//     { name: 'email', label: 'Email', required: true },
+//     { name: 'phoneNumber', label: 'Phone Number' },
+//   ];
+
+//   const initialValues: CreateStudentFormValues = {
+//     firstName: '',
+//     lastName: '',
+//     email: '',
+//     phoneNumber: '',
+//   };
+
+//   return { fields, initialValues };
+// };
+
 const buildStudentCreate = (): {
+  fields: Array<FormField<Extract<keyof CreateStudentFormValues, string>>>;
+  initialValues: CreateStudentFormValues;
+  generateMockValues: () => CreateStudentFormValues;
+} => {
+  const fields: Array<
+    FormField<Extract<keyof CreateStudentFormValues, string>>
+  > = [
+    { name: 'firstName', label: 'Firstname', required: true },
+    { name: 'lastName', label: 'Lastname', required: true },
+    { name: 'email', label: 'Email', required: true },
+    { name: 'phoneNumber', label: 'Phone Number' },
+  ];
+
+  const initialValues: CreateStudentFormValues = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+  };
+
+  const generateMockValues = (): CreateStudentFormValues => {
+    const firstName = faker.person.firstName();
+    const lastName = faker.person.lastName();
+
+    return {
+      firstName,
+      lastName,
+      // Genererar email baserat på de slumpade namnen för extra realism
+      email: faker.internet.email({ firstName, lastName }).toLowerCase(),
+      phoneNumber: faker.phone.number({ style: 'international' }),
+    };
+  };
+
+  return { fields, initialValues, generateMockValues };
+};
+
+const buildInstructorCreate = (): {
   fields: Array<FormField<Extract<keyof CreateStudentFormValues, string>>>;
   initialValues: CreateStudentFormValues;
 } => {
@@ -70,24 +136,74 @@ const buildStudentCreate = (): {
   return { fields, initialValues };
 };
 
-const buildInstructorCreate = (): {
-  fields: Array<FormField<Extract<keyof CreateStudentFormValues, string>>>;
-  initialValues: CreateStudentFormValues;
+const buildCompetenceCreate = (): {
+  fields: Array<FormField<Extract<keyof CreateCompetenceFormValues, string>>>;
+  initialValues: CreateCompetenceFormValues;
 } => {
   const fields: Array<
-    FormField<Extract<keyof CreateStudentFormValues, string>>
+    FormField<Extract<keyof CreateCompetenceFormValues, string>>
+  > = [{ name: 'name', label: 'Competence name', required: true }];
+
+  const initialValues: CreateCompetenceFormValues = {
+    name: '',
+  };
+
+  return { fields, initialValues };
+};
+
+const buildCompetenceEdit = (
+  c: Competence,
+): {
+  fields: Array<FormField<Extract<keyof UpdateCompetenceFormValues, string>>>;
+  initialValues: UpdateCompetenceFormValues;
+} => {
+  const fields: Array<
+    FormField<Extract<keyof UpdateCompetenceFormValues, string>>
   > = [
-    { name: 'firstName', label: 'Firstname', required: true },
-    { name: 'lastName', label: 'Lastname', required: true },
-    { name: 'email', label: 'Email', required: true },
-    { name: 'phoneNumber', label: 'Phone Number' },
+    { name: 'id', kind: 'hidden' },
+    { name: 'rowVersion', kind: 'hidden' },
+    { name: 'name', label: 'Competence name', required: true },
   ];
 
-  const initialValues: CreateStudentFormValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    phoneNumber: '',
+  const initialValues: UpdateCompetenceFormValues = {
+    id: c.id,
+    rowVersion: c.rowVersion,
+    name: c.name ?? '',
+  };
+
+  return { fields, initialValues };
+};
+
+const buildAddCompetenceToInstructor = (
+  instructorId: string,
+  rowVersion: string,
+  competences: Competence[],
+): {
+  fields: Array<
+    FormField<Extract<keyof AddCompetenceFormValues, string>, string>
+  >;
+  initialValues: AddCompetenceFormValues;
+} => {
+  const fields: Array<
+    FormField<Extract<keyof AddCompetenceFormValues, string>, string>
+  > = [
+    { name: 'instructorId', kind: 'hidden' },
+    { name: 'rowVersion', kind: 'hidden' },
+
+    {
+      kind: 'select',
+      name: 'competenceName',
+      label: 'Competence',
+      required: true,
+      placeholderOption: 'Select competence...',
+      options: competences.map((c) => ({ label: c.name, value: c.name })),
+    },
+  ];
+
+  const initialValues: AddCompetenceFormValues = {
+    instructorId,
+    rowVersion,
+    competenceName: '',
   };
 
   return { fields, initialValues };
@@ -296,7 +412,6 @@ const buildCourseSessionCreate = (
 };
 
 const toDateTimeLocal = (iso: string): string => {
-  // ISO -> "YYYY-MM-DDTHH:mm" i lokal tid
   const d = new Date(iso);
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(
@@ -394,14 +509,56 @@ const buildCourseSessionEdit = (
   return { fields, initialValues };
 };
 
+const buildEnrollStudentToSession = (
+  studentId: string,
+  sessions: CourseSession[],
+): {
+  fields: Array<
+    FormField<Extract<keyof EnrollStudentToSessionFormValues, string>, string>
+  >;
+  initialValues: EnrollStudentToSessionFormValues;
+} => {
+  const fields: Array<
+    FormField<Extract<keyof EnrollStudentToSessionFormValues, string>, string>
+  > = [
+    { name: 'studentId', kind: 'hidden' },
+
+    {
+      kind: 'select',
+      name: 'courseSessionId',
+      label: 'Course session',
+      required: true,
+      placeholderOption: 'Select session...',
+      options: sessions.map((s) => ({
+        label: `${s.course.courseName} • ${s.courseCode} • ${new Date(s.startDate).toLocaleString('sv-SE')} • ${s.location.locationName}`,
+        value: s.id,
+      })),
+    },
+
+    { name: 'rowVersion', kind: 'hidden' },
+  ];
+
+  const initialValues: EnrollStudentToSessionFormValues = {
+    studentId,
+    courseSessionId: '',
+    rowVersion: '',
+  };
+
+  return { fields, initialValues };
+};
+
 export {
   buildAttendeeEdit,
   buildStudentCreate,
   buildInstructorCreate,
+  buildCompetenceCreate,
+  buildCompetenceEdit,
+  buildAddCompetenceToInstructor,
   buildLocationEdit,
   buildLocationCreate,
   buildCourseEdit,
   buildCourseSessionEdit,
   buildCourseCreate,
   buildCourseSessionCreate,
+  buildEnrollStudentToSession,
 };

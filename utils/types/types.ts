@@ -1,6 +1,7 @@
 export type AttendeeRole = 'Student' | 'Instructor';
 export type CourseType = 'BAS' | 'INT' | 'ADV' | 'EXP';
 export type CourseTypeName = 'Basic' | 'Intermediate' | 'Advanced' | 'Expert';
+export type EnrollmentStatus = 'Pending' | 'Approved' | 'Denied';
 
 export type Competence = {
   id: string;
@@ -59,4 +60,12 @@ export type UpdateAttendeeDTO = {
   firstName?: string | null;
   lastName?: string | null;
   phoneNumber?: string | null;
+};
+
+export type Enrollment = {
+  id: string;
+  studentId: string;
+  studentName: string;
+  status: EnrollmentStatus;
+  enrolledAt: string;
 };

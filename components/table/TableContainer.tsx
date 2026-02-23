@@ -7,6 +7,7 @@ import InstructorsTable from '../instructors/InstructorsTable';
 import LocationsTable from '../locations/LocationsTable';
 import CourseSessionsTable from '../courseSessions/CourseSessionsTable';
 import { useRouter, useSearchParams } from 'next/navigation';
+import CompetenceTable from '../competences/CompetenceTable';
 
 const TableContainer = () => {
   const searchParams = useSearchParams();
@@ -24,6 +25,7 @@ const TableContainer = () => {
         <TabsList>
           <TabsTrigger value='students'>Students</TabsTrigger>
           <TabsTrigger value='instructors'>Instructors</TabsTrigger>
+          <TabsTrigger value='competences'>Competences</TabsTrigger>
           <TabsTrigger value='locations'>Locations</TabsTrigger>
           <TabsTrigger value='courses'>Courses</TabsTrigger>
           <TabsTrigger value='courseSessions'>CourseSessions</TabsTrigger>
@@ -35,6 +37,10 @@ const TableContainer = () => {
 
         <TabsContent value='instructors'>
           <InstructorsTable />
+        </TabsContent>
+
+        <TabsContent value='competences'>
+          <CompetenceTable />
         </TabsContent>
 
         <TabsContent value='locations'>

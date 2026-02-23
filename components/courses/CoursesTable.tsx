@@ -24,6 +24,7 @@ import type {
   UpdateCourseDTO,
   UpdateCourseFormValues,
 } from '@/utils/types/dto';
+import { toast } from 'sonner';
 
 const CoursesTable = () => {
   const queryClient = useQueryClient();
@@ -44,6 +45,13 @@ const CoursesTable = () => {
   const updateMutation = useMutation({
     mutationFn: ({ id, dto }: { id: string; dto: UpdateCourseDTO }) =>
       courseService.update(id, dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['courses'] });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => courseService.remove(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['courses'] });
     },
@@ -105,7 +113,23 @@ const CoursesTable = () => {
                 </TableCell>
 
                 <TableCell className='flex gap-2'>
-                  <Trash2 />
+                  <Trash2
+                    className='cursor-pointer'
+                    onClick={async () => {
+                      const ok = window.confirm('Delete this course?');
+                      if (!ok) return;
+
+                      await toast.promise(
+                        deleteMutation.mutateAsync(course.id),
+                        {
+                          loading: 'Deleting...',
+                          success: 'Course deleted',
+                          error: (e) =>
+                            e instanceof Error ? e.message : 'Failed to delete',
+                        },
+                      );
+                    }}
+                  />
 
                   <CDialog<UpdateCourseFormValues>
                     title='Edit course'

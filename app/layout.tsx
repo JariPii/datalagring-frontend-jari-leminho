@@ -6,6 +6,7 @@ import Header from '@/components/header/Header';
 import Footer from '@/components/footer/Footer';
 import Container from '@/components/global/Container';
 import QueryProvider from '@/providers/QueryProvider';
+import { Toaster } from 'sonner';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -41,6 +42,12 @@ export default function RootLayout({
           >
             <Header />
             <Container>{children}</Container>
+            <Toaster
+              position='top-right'
+              richColors
+              closeButton
+              expand={false}
+            />
             <Footer />
           </Themeprovider>
         </QueryProvider>

@@ -23,6 +23,8 @@ import type {
   UpdateAttendeeFormValues,
 } from '@/utils/types/dto';
 import CreateInstructorDialog from './CreateInstructorDialog';
+import { toast } from 'sonner';
+import AddCompetenceDialog from './AddCompetenceDialog';
 
 const InstructorsTable = () => {
   const queryClient = useQueryClient();
@@ -40,6 +42,13 @@ const InstructorsTable = () => {
   const updateMutation = useMutation({
     mutationFn: ({ id, dto }: { id: string; dto: UpdateAttendeeDTO }) =>
       attendeeService.update(id, dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['attendees', 'instructors'] });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => attendeeService.remove(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['attendees', 'instructors'] });
     },
@@ -98,7 +107,23 @@ const InstructorsTable = () => {
                 </TableCell>
 
                 <TableCell className='flex gap-2'>
-                  <Trash2 />
+                  <Trash2
+                    className='cursor-pointer'
+                    onClick={async () => {
+                      const ok = window.confirm('Delete this instructor?');
+                      if (!ok) return;
+
+                      await toast.promise(
+                        deleteMutation.mutateAsync(instructor.id),
+                        {
+                          loading: 'Deleting...',
+                          success: 'Instructor deleted',
+                          error: (e) =>
+                            e instanceof Error ? e.message : 'Failed to delete',
+                        },
+                      );
+                    }}
+                  />
 
                   <CDialog<UpdateAttendeeFormValues>
                     title='Edit instructor'
@@ -118,6 +143,11 @@ const InstructorsTable = () => {
 
                       updateMutation.mutate({ id: values.id, dto });
                     }}
+                  />
+
+                  <AddCompetenceDialog
+                    instructorId={instructor.id}
+                    rowVersion={instructor.rowVersion}
                   />
                 </TableCell>
               </TableRow>

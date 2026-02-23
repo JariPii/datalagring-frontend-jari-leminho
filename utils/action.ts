@@ -5,8 +5,21 @@ import {
   mockSessions,
 } from './dummy-data';
 import { ApiError, type ProblemDetails } from './types/api';
-import { UpdateCourseSessionDTO } from './types/dto';
-import { Attendee, Course, CourseSession, Location } from './types/types';
+import {
+  AddCompetenceDTO,
+  CreateCompetenceDTO,
+  EnrollStudentDTO,
+  UpdateCourseSessionDTO,
+  UpdateEnrollmentStatusDTO,
+} from './types/dto';
+import {
+  Attendee,
+  Competence,
+  Course,
+  CourseSession,
+  Enrollment,
+  Location,
+} from './types/types';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const USE_MOCK_DATA = process.env.NEXT_PUBLIC_USE_MOCK === 'true';
@@ -62,7 +75,10 @@ async function apiFetch<T>(
 
     if (res.status === 204) return undefined as T;
 
-    return (await res.json()) as T;
+    const text = await res.text();
+    if (!text) return undefined as T;
+
+    return JSON.parse(text) as T;
   } catch (err) {
     const isAbort = err instanceof DOMException && err.name === 'AbortError';
     if (isAbort) throw err;
@@ -98,6 +114,12 @@ export const attendeeService = {
       { signal },
     ),
 
+  addCompetence: (instructorId: string, dto: AddCompetenceDTO) =>
+    apiFetch<{ message: string }>(`/attendees/${instructorId}/competences`, {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    }),
+
   create: (data: unknown) =>
     apiFetch<Attendee>('/attendees', {
       method: 'POST',
@@ -108,6 +130,33 @@ export const attendeeService = {
     apiFetch<Attendee>(`/attendees/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
+    }),
+
+  remove: (id: string) =>
+    apiFetch<void>(`/attendees/${id}`, {
+      method: 'DELETE',
+    }),
+};
+
+export const competenceService = {
+  getAll: (signal?: AbortSignal) =>
+    apiFetch<Competence[]>('/competences', { signal }),
+
+  create: (dto: CreateCompetenceDTO) =>
+    apiFetch<Competence>('/competences', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    }),
+
+  update: (id: string, dto: unknown) =>
+    apiFetch<Competence>(`/competences/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(dto),
+    }),
+
+  remove: (id: string) =>
+    apiFetch<void>(`/competences/${id}`, {
+      method: 'DELETE',
     }),
 };
 
@@ -124,6 +173,11 @@ export const courseService = {
     apiFetch<Course>(`/courses/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
+    }),
+
+  remove: (id: string) =>
+    apiFetch<void>(`/courses/${id}`, {
+      method: 'DELETE',
     }),
 };
 
@@ -142,6 +196,11 @@ export const locationService = {
       method: 'PATCH',
       body: JSON.stringify(data),
     }),
+
+  remove: (id: string) =>
+    apiFetch<void>(`/locations/${id}`, {
+      method: 'DELETE',
+    }),
 };
 
 export const courseSessionService = {
@@ -159,4 +218,33 @@ export const courseSessionService = {
       method: 'PATCH',
       body: JSON.stringify(data),
     }),
+
+  remove: (id: string) =>
+    apiFetch<void>(`/courseSessions/${id}`, {
+      method: 'DELETE',
+    }),
+
+  enrollStudent: (courseSessionId: string, dto: EnrollStudentDTO) =>
+    apiFetch<void>(`/courseSessions/${courseSessionId}/enrollments`, {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    }),
+
+  getEnrollments: (courseSessionId: string, signal?: AbortSignal) =>
+    apiFetch<Enrollment[]>(`/courseSessions/${courseSessionId}/enrollments`, {
+      signal,
+    }),
+
+  setEnrollmentStatus: (
+    courseSessionId: string,
+    studentId: string,
+    dto: UpdateEnrollmentStatusDTO,
+  ) =>
+    apiFetch<void>(
+      `/courseSessions/${courseSessionId}/enrollment/${studentId}/status`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(dto),
+      },
+    ),
 };

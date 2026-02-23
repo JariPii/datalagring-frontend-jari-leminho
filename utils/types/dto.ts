@@ -1,4 +1,4 @@
-import { AttendeeRole, CourseType } from './types';
+import { AttendeeRole, CourseType, EnrollmentStatus } from './types';
 
 export type UpdateAttendeeDTO = {
   rowVersion: string;
@@ -37,6 +37,36 @@ export type CreateInstructorFormValues = {
   firstName: string;
   lastName: string;
   phoneNumber: string;
+};
+
+export type CreateCompetenceDTO = {
+  name: string;
+};
+
+export type CreateCompetenceFormValues = {
+  name: string;
+};
+
+export type UpdateCompetenceDTO = {
+  rowVersion: string;
+  name?: string | null;
+};
+
+export type UpdateCompetenceFormValues = {
+  id: string;
+  rowVersion: string;
+  name: string;
+};
+
+export type AddCompetenceDTO = {
+  competenceName: string;
+  rowVersion: string;
+};
+
+export type AddCompetenceFormValues = {
+  instructorId: string;
+  rowVersion: string;
+  competenceName: string;
 };
 
 export type UpdateLocationDTO = {
@@ -91,20 +121,19 @@ export type CreateCourseFormValues = {
 export type CreateCourseSessionDTO = {
   courseCode: string;
   locationName: string;
-  startDate: string; // ISO string går bra till DateTime i .NET
+  startDate: string;
   endDate: string;
   capacity: number;
-  instructorIds: string[]; // GUIDs som strings
+  instructorIds: string[];
 };
 
-// FormData ger strings -> vi håller allt som string i form
 export type CreateCourseSessionFormValues = {
   courseCode: string;
   locationName: string;
-  startDate: string; // från datetime-local
+  startDate: string;
   endDate: string;
-  capacity: string; // input number ger string
-  instructorIds: string; // comma-separated GUIDs: "id1,id2,id3"
+  capacity: string;
+  instructorIds: string;
 };
 
 export type UpdateCourseSessionDTO = {
@@ -133,5 +162,28 @@ export type UpdateCourseSessionFormValues = {
 
   capacity: string;
 
-  instructorIds: string; // comma-separated
+  instructorIds: string;
+};
+
+export type EnrollStudentDTO = {
+  studentId: string;
+  rowVersion: string;
+};
+
+export type UpdateEnrollmentStatusDTO = {
+  newStatus: EnrollmentStatus;
+  rowVersion: string;
+};
+
+export type EnrollStudentToSessionFormValues = {
+  studentId: string;
+  courseSessionId: string;
+  rowVersion: string;
+};
+
+export type UpdateEnrollmentStatusFormValues = {
+  courseSessionId: string;
+  studentId: string;
+  rowVersion: string;
+  newStatus: EnrollmentStatus | '';
 };

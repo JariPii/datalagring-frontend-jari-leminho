@@ -11,13 +11,17 @@ import {
   TableRow,
 } from '../ui/table';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Trash2 } from 'lucide-react';
 
 import CreateCourseSessionDialog from './CreateCourseSessionDialog';
 import EditCourseSessionDialog from './EditCourseSessionDialog';
+import ManageEnrollmentsDialog from './ManageEnrollmentsDialog';
+import { toast } from 'sonner';
 
 const CourseSessionsTable = () => {
+  const queryClient = useQueryClient();
+
   const {
     data: courseSessions = [],
     isPending,
@@ -26,6 +30,14 @@ const CourseSessionsTable = () => {
   } = useQuery({
     queryKey: ['courseSessions'],
     queryFn: ({ signal }) => courseSessionService.getAll(signal),
+    staleTime: 1000 * 5,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => courseSessionService.remove(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['courseSessions'] });
+    },
   });
 
   if (isPending) return <div>Loading...</div>;
@@ -51,6 +63,7 @@ const CourseSessionsTable = () => {
             <TableHead>Instructors</TableHead>
             <TableHead>Capacity</TableHead>
             <TableHead>Approved students</TableHead>
+            <TableHead>Enrollments</TableHead>
             <TableHead />
           </TableRow>
         </TableHeader>
@@ -91,9 +104,30 @@ const CourseSessionsTable = () => {
               <TableCell>{session.approvedEnrollmentsCount}</TableCell>
 
               <TableCell className='flex gap-3'>
-                <Trash2 />
-                {/* ✅ skicka HELA session */}
+                <Trash2
+                  className='cursor-pointer'
+                  onClick={async () => {
+                    const ok = window.confirm('Delete this courseSession?');
+                    if (!ok) return;
+
+                    await toast.promise(
+                      deleteMutation.mutateAsync(session.id),
+                      {
+                        loading: 'Deleting...',
+                        success: 'Student deleted',
+                        error: (e) =>
+                          e instanceof Error ? e.message : 'Failed to delete',
+                      },
+                    );
+                  }}
+                />
+
                 <EditCourseSessionDialog session={session} />
+
+                <ManageEnrollmentsDialog
+                  courseSessionId={session.id}
+                  rowVersion={session.rowVersion}
+                />
               </TableCell>
             </TableRow>
           ))}

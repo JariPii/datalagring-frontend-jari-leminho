@@ -22,6 +22,8 @@ import type {
   UpdateAttendeeFormValues,
 } from '@/utils/types/dto';
 import CreateStudentDialog from './CreateStudentDialog';
+import EnrollStudentToSessionDialog from './EnrollStudentToSessionDialog';
+import { toast } from 'sonner';
 
 const StudentsTable = () => {
   const queryClient = useQueryClient();
@@ -34,11 +36,19 @@ const StudentsTable = () => {
   } = useQuery({
     queryKey: ['attendees', 'students'],
     queryFn: ({ signal }) => attendeeService.getAllStudents(signal),
+    staleTime: 5_000,
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, dto }: { id: string; dto: UpdateAttendeeDTO }) =>
       attendeeService.update(id, dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['attendees', 'students'] });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => attendeeService.remove(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['attendees', 'students'] });
     },
@@ -96,7 +106,23 @@ const StudentsTable = () => {
                 </TableCell>
 
                 <TableCell className='flex gap-2'>
-                  <Trash2 />
+                  <Trash2
+                    className='cursor-pointer'
+                    onClick={async () => {
+                      const ok = window.confirm('Delete this student?');
+                      if (!ok) return;
+
+                      await toast.promise(
+                        deleteMutation.mutateAsync(student.id),
+                        {
+                          loading: 'Deleting...',
+                          success: 'Student deleted',
+                          error: (e) =>
+                            e instanceof Error ? e.message : 'Failed to delete',
+                        },
+                      );
+                    }}
+                  />
 
                   <CDialog<UpdateAttendeeFormValues>
                     title='Edit student'
@@ -117,6 +143,7 @@ const StudentsTable = () => {
                       updateMutation.mutate({ id: values.id, dto });
                     }}
                   />
+                  <EnrollStudentToSessionDialog studentId={student.id} />
                 </TableCell>
               </TableRow>
             );
