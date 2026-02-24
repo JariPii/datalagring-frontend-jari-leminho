@@ -19,6 +19,7 @@ import {
   CourseSession,
   Enrollment,
   Location,
+  PagedResultDTO,
 } from './types/types';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -103,8 +104,30 @@ export const attendeeService = {
   getAllStudents: (signal?: AbortSignal) =>
     apiFetch<Attendee[]>('/attendees/students', { signal }),
 
+  getStudentsPaged: (
+    p: { page: number; pageSize: number; q?: string },
+    signal?: AbortSignal,
+  ) =>
+    apiFetch<PagedResultDTO<Attendee>>(
+      `/attendees/students/paged/?page=${p.page}&pageSize=${p.pageSize}${
+        p.q?.trim() ? `&q=${encodeURIComponent(p.q.trim())}` : ''
+      }`,
+      { signal },
+    ),
+
   getAllInstructors: (signal?: AbortSignal) =>
     apiFetch<Attendee[]>('/attendees/instructors', { signal }),
+
+  getInstructorsPaged: (
+    p: { page: number; pageSize: number; q?: string },
+    signal?: AbortSignal,
+  ) =>
+    apiFetch<PagedResultDTO<Attendee>>(
+      `/attendees/instructors/paged/?page=${p.page}&pageSize=${p.pageSize}${
+        p.q?.trim() ? `&q=${encodeURIComponent(p.q.trim())}` : ''
+      }`,
+      { signal },
+    ),
 
   getById: (id: string) => apiFetch<Attendee>(`/attendees/${id}`),
 
@@ -116,6 +139,12 @@ export const attendeeService = {
   getByEmail: (email: string, signal?: AbortSignal) =>
     apiFetch<Attendee>(
       `/attendees/by-email?email=${encodeURIComponent(email)}`,
+      { signal },
+    ),
+
+  getInstructorsByCompetence: (name: string, signal?: AbortSignal) =>
+    apiFetch<Attendee[]>(
+      `/attendees/instructors/competence/${encodeURIComponent(name)}`,
       { signal },
     ),
 
@@ -147,6 +176,17 @@ export const competenceService = {
   getAll: (signal?: AbortSignal) =>
     apiFetch<Competence[]>('/competences', { signal }),
 
+  getPaged: (
+    p: { page: number; pageSize: number; q?: string },
+    signal?: AbortSignal,
+  ) =>
+    apiFetch<PagedResultDTO<Competence>>(
+      `/competences/paged?page=${p.page}&pageSize=${p.pageSize}${
+        p.q?.trim() ? `&q=${encodeURIComponent(p.q.trim())}` : ''
+      }`,
+      { signal },
+    ),
+
   create: (dto: CreateCompetenceDTO) =>
     apiFetch<Competence>('/competences', {
       method: 'POST',
@@ -167,6 +207,20 @@ export const competenceService = {
 
 export const courseService = {
   getAll: (signal?: AbortSignal) => apiFetch<Course[]>('/courses', { signal }),
+
+  getById: (id: string, signal?: AbortSignal) =>
+    apiFetch<Course>(`/courses/${id}`, { signal }),
+
+  getPaged: (
+    p: { page: number; pageSize: number; q?: string },
+    signal?: AbortSignal,
+  ) =>
+    apiFetch<PagedResultDTO<Course>>(
+      `/courses/paged?page=${p.page}&pageSize=${p.pageSize}${
+        p.q?.trim() ? `&q=${encodeURIComponent(p.q.trim())}` : ''
+      }`,
+      { signal },
+    ),
 
   create: (data: unknown) =>
     apiFetch<Course>('/courses', {
@@ -190,6 +244,17 @@ export const locationService = {
   getAll: (signal?: AbortSignal) =>
     apiFetch<Location[]>('/locations', { signal }),
 
+  getPaged: (
+    p: { page: number; pageSize: number; q?: string },
+    signal?: AbortSignal,
+  ) =>
+    apiFetch<PagedResultDTO<Location>>(
+      `/locations/paged/?page=${p.page}&pageSize=${p.pageSize}${
+        p.q?.trim() ? `&q=${encodeURIComponent(p.q.trim())}` : ''
+      }`,
+      { signal },
+    ),
+
   create: (data: unknown) =>
     apiFetch<Location>('/locations', {
       method: 'POST',
@@ -211,6 +276,20 @@ export const locationService = {
 export const courseSessionService = {
   getAll: (signal?: AbortSignal) =>
     apiFetch<CourseSession[]>('/courseSessions', { signal }),
+
+  getById: async (id: string, signal?: AbortSignal): Promise<CourseSession> =>
+    apiFetch(`/courseSessions/${id}`, { signal }),
+
+  getPaged: (
+    p: { page: number; pageSize: number; q?: string },
+    signal?: AbortSignal,
+  ) =>
+    apiFetch<PagedResultDTO<CourseSession>>(
+      `/courseSessions/paged/?page=${p.page}&pageSize=${p.pageSize}${
+        p.q?.trim() ? `&q=${encodeURIComponent(p.q.trim())}` : ''
+      }`,
+      { signal },
+    ),
 
   create: (data: unknown) =>
     apiFetch('/courseSessions', {

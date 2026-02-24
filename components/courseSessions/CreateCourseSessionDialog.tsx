@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 
@@ -17,7 +16,7 @@ import type {
   CreateCourseSessionDTO,
   CreateCourseSessionFormValues,
 } from '@/utils/types/dto';
-
+import CButton from '../Button/CButton';
 const CreateCourseSessionDialog = ({
   triggerText = 'New Course Session',
 }: {
@@ -60,9 +59,7 @@ const CreateCourseSessionDialog = ({
     <CDialog<CreateCourseSessionFormValues>
       title='New course session'
       description='Pick existing course/location/instructors, set dates and capacity.'
-      trigger={
-        <Button disabled={loading}>{loading ? 'Loading…' : triggerText}</Button>
-      }
+      trigger={<CButton>{loading ? 'Loading…' : triggerText}</CButton>}
       fields={fields}
       initialValues={initialValues}
       onSave={async (values) => {

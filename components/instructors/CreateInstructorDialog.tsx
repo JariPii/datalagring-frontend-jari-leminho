@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import CDialog from '@/components/dialog/CDialog';
@@ -16,7 +15,12 @@ import type {
 
 const CreateInstructorDialog = () => {
   const queryClient = useQueryClient();
-  const { fields, initialValues } = buildInstructorCreate();
+  const { fields, initialValues, generateMockValues } = buildInstructorCreate();
+
+  const defaultValues =
+    process.env.NODE_ENV === 'development'
+      ? generateMockValues()
+      : initialValues;
 
   const createMutation = useMutation({
     mutationFn: (dto: CreateAttendeeDTO) => attendeeService.create(dto),
@@ -31,7 +35,7 @@ const CreateInstructorDialog = () => {
       description='Fill in the instructor details and click save.'
       trigger={<CButton>New Instructor</CButton>}
       fields={fields}
-      initialValues={initialValues}
+      initialValues={defaultValues}
       onSave={async (values) => {
         const dto: CreateAttendeeDTO = {
           firstName: values.firstName,

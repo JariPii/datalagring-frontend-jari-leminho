@@ -20,6 +20,7 @@ import type {
   AddCompetenceFormValues,
   CreateCompetenceFormValues,
   UpdateCompetenceFormValues,
+  CreateInstructorFormValues,
 } from '@/utils/types/dto';
 import { faker } from '@faker-js/faker';
 
@@ -97,28 +98,17 @@ const buildStudentCreate = (): {
     phoneNumber: '',
   };
 
-  const generateMockValues = (): CreateStudentFormValues => {
-    const firstName = faker.person.firstName();
-    const lastName = faker.person.lastName();
-
-    return {
-      firstName,
-      lastName,
-      // Genererar email baserat på de slumpade namnen för extra realism
-      email: faker.internet.email({ firstName, lastName }).toLowerCase(),
-      phoneNumber: faker.phone.number({ style: 'international' }),
-    };
-  };
-
   return { fields, initialValues, generateMockValues };
 };
 
 const buildInstructorCreate = (): {
-  fields: Array<FormField<Extract<keyof CreateStudentFormValues, string>>>;
-  initialValues: CreateStudentFormValues;
+  fields: Array<FormField<Extract<keyof CreateInstructorFormValues, string>>>;
+  initialValues: CreateInstructorFormValues;
+
+  generateMockValues: () => CreateInstructorFormValues;
 } => {
   const fields: Array<
-    FormField<Extract<keyof CreateStudentFormValues, string>>
+    FormField<Extract<keyof CreateInstructorFormValues, string>>
   > = [
     { name: 'firstName', label: 'Firstname', required: true },
     { name: 'lastName', label: 'Lastname', required: true },
@@ -126,14 +116,26 @@ const buildInstructorCreate = (): {
     { name: 'phoneNumber', label: 'Phone Number' },
   ];
 
-  const initialValues: CreateStudentFormValues = {
+  const initialValues: CreateInstructorFormValues = {
     firstName: '',
     lastName: '',
     email: '',
     phoneNumber: '',
   };
 
-  return { fields, initialValues };
+  return { fields, initialValues, generateMockValues };
+};
+
+const generateMockValues = (): CreateInstructorFormValues => {
+  const firstName = faker.person.firstName();
+  const lastName = faker.person.lastName();
+
+  return {
+    firstName,
+    lastName,
+    email: faker.internet.email({ firstName, lastName }).toLowerCase(),
+    phoneNumber: faker.phone.number({ style: 'international' }),
+  };
 };
 
 const buildCompetenceCreate = (): {
@@ -235,6 +237,7 @@ const buildLocationEdit = (
 const buildLocationCreate = (): {
   fields: Array<FormField<Extract<keyof CreateLocationFormValues, string>>>;
   initialValues: CreateLocationFormValues;
+  generateLocationMockValues: () => CreateLocationFormValues;
 } => {
   const fields: Array<
     FormField<Extract<keyof CreateLocationFormValues, string>>
@@ -244,7 +247,15 @@ const buildLocationCreate = (): {
     locationName: '',
   };
 
-  return { fields, initialValues };
+  return { fields, initialValues, generateLocationMockValues };
+};
+
+const generateLocationMockValues = (): CreateLocationFormValues => {
+  const locationName = faker.location.city();
+
+  return {
+    locationName,
+  };
 };
 
 const buildCourseEdit = (

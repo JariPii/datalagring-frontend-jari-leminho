@@ -23,6 +23,16 @@ export type Attendee = {
   createdAt: string;
 };
 
+export type PagedResultDTO<T> = {
+  items: T[];
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+};
+
 export type Course = {
   id: string;
   courseCode: string;

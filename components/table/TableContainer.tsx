@@ -8,6 +8,7 @@ import LocationsTable from '../locations/LocationsTable';
 import CourseSessionsTable from '../courseSessions/CourseSessionsTable';
 import { useRouter, useSearchParams } from 'next/navigation';
 import CompetenceTable from '../competences/CompetenceTable';
+import { ScrollArea } from '../ui/scroll-area';
 
 const TableContainer = () => {
   const searchParams = useSearchParams();
@@ -30,7 +31,6 @@ const TableContainer = () => {
           <TabsTrigger value='courses'>Courses</TabsTrigger>
           <TabsTrigger value='courseSessions'>CourseSessions</TabsTrigger>
         </TabsList>
-
         <TabsContent value='students'>
           <StudentsTable />
         </TabsContent>

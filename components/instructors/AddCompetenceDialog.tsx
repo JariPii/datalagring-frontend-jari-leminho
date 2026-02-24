@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -37,13 +36,17 @@ const AddCompetenceDialog = ({ instructorId, rowVersion }: Props) => {
   const addMutation = useMutation({
     mutationFn: (p: { id: string; dto: AddCompetenceDTO }) =>
       attendeeService.addCompetenceToInstructor(p.id, p.dto),
+
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['attendees', 'instructors'],
-      });
-      await queryClient.invalidateQueries({
-        queryKey: ['attendees', 'students'],
-      }); // valfritt
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ['attendees', 'instructors', 'paged'],
+        }),
+
+        queryClient.invalidateQueries({
+          queryKey: ['attendees', instructorId],
+        }),
+      ]);
     },
   });
 

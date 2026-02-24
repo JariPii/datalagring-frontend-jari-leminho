@@ -11,12 +11,9 @@ import type {
   CreateCourseDTO,
   CreateCourseFormValues,
 } from '@/utils/types/dto';
+import CButton from '../Button/CButton';
 
-type Props = {
-  trigger: React.ReactNode;
-};
-
-const CreateCourseDialog = ({ trigger }: Props) => {
+const CreateCourseDialog = () => {
   const queryClient = useQueryClient();
   const { fields, initialValues } = buildCourseCreate();
 
@@ -31,7 +28,7 @@ const CreateCourseDialog = ({ trigger }: Props) => {
     <CDialog<CreateCourseFormValues>
       title='New course'
       description='Fill in the course details and click save.'
-      trigger={trigger}
+      trigger={<CButton>New Course</CButton>}
       fields={fields}
       initialValues={initialValues}
       onSave={async (values) => {

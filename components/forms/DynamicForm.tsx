@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { ScrollArea } from '../ui/scroll-area';
 
 export type FieldType =
   | 'text'
@@ -185,24 +186,26 @@ const DynamicForm = <TValues extends Record<string, string>>({
             <div key={f.name} className='grid gap-3'>
               <Label htmlFor={groupId}>{labelText}</Label>
 
-              <div id={groupId} className='grid gap-2'>
-                {f.options.map((opt) => (
-                  <label
-                    key={opt.value}
-                    className='flex items-center gap-2 text-sm'
-                  >
-                    <input
-                      type='checkbox'
-                      name={f.name}
-                      value={opt.value}
-                      className='h-4 w-4'
-                      aria-label={`${labelText}: ${opt.label}`}
-                      defaultChecked={checked.has(opt.value)}
-                    />
-                    <span>{opt.label}</span>
-                  </label>
-                ))}
-              </div>
+              <ScrollArea className='h-[15vh]'>
+                <div id={groupId} className='grid gap-2'>
+                  {f.options.map((opt) => (
+                    <label
+                      key={opt.value}
+                      className='flex items-center gap-2 text-sm'
+                    >
+                      <input
+                        type='checkbox'
+                        name={f.name}
+                        value={opt.value}
+                        className='h-4 w-4'
+                        aria-label={`${labelText}: ${opt.label}`}
+                        defaultChecked={checked.has(opt.value)}
+                      />
+                      <span>{opt.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </ScrollArea>
             </div>
           );
         }

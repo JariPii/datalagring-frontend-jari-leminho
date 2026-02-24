@@ -13,6 +13,7 @@ import type {
   CreateCompetenceDTO,
   CreateCompetenceFormValues,
 } from '@/utils/types/dto';
+import CButton from '../Button/CButton';
 
 const CreateCompetenceDialog = () => {
   const queryClient = useQueryClient();
@@ -29,7 +30,7 @@ const CreateCompetenceDialog = () => {
     <CDialog<CreateCompetenceFormValues>
       title='New competence'
       description='Enter a competence name and click save.'
-      trigger={<Button>New Competence</Button>}
+      trigger={<CButton>New Competence</CButton>}
       fields={fields}
       initialValues={initialValues}
       onSave={async (values) => {

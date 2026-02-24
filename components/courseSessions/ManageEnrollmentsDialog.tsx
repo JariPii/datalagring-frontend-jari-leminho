@@ -16,6 +16,7 @@ import { courseSessionService } from '@/utils/action';
 import type { Enrollment, EnrollmentStatus } from '@/utils/types/types';
 import type { UpdateEnrollmentStatusDTO } from '@/utils/types/dto';
 import { toast } from 'sonner';
+import { ScrollArea } from '../ui/scroll-area';
 
 type Props = {
   courseSessionId: string;
@@ -100,47 +101,48 @@ const ManageEnrollmentsDialog = ({ courseSessionId, rowVersion }: Props) => {
           {!isPending && !isError && enrollments.length === 0 ? (
             <div>No enrollments</div>
           ) : null}
-
-          {!isPending && !isError
-            ? enrollments.map((e: Enrollment) => (
-                <div
-                  key={e.id}
-                  className='flex items-center justify-between gap-4 rounded-md border p-3'
-                >
-                  <div className='min-w-0'>
-                    <div className='text-sm font-medium truncate'>
-                      {e.studentName}
+          <ScrollArea className='h-[50vh]'>
+            {!isPending && !isError
+              ? enrollments.map((e: Enrollment) => (
+                  <div
+                    key={e.id}
+                    className='flex items-center justify-between gap-4 rounded-md border p-3'
+                  >
+                    <div className='min-w-0'>
+                      <div className='text-sm font-medium truncate'>
+                        {e.studentName}
+                      </div>
+                      <div className='text-xs opacity-70'>
+                        Status: {e.status} •{' '}
+                        {new Date(e.enrolledAt).toLocaleString('sv-SE')}
+                      </div>
                     </div>
-                    <div className='text-xs opacity-70'>
-                      Status: {e.status} •{' '}
-                      {new Date(e.enrolledAt).toLocaleString('sv-SE')}
+
+                    <div className='flex gap-2'>
+                      <Button
+                        variant='secondary'
+                        disabled={
+                          statusMutation.isPending || e.status === 'Approved'
+                        }
+                        onClick={() => setStatus(e.studentId, 'Approved')}
+                      >
+                        Approve
+                      </Button>
+
+                      <Button
+                        variant='destructive'
+                        disabled={
+                          statusMutation.isPending || e.status === 'Denied'
+                        }
+                        onClick={() => setStatus(e.studentId, 'Denied')}
+                      >
+                        Deny
+                      </Button>
                     </div>
                   </div>
-
-                  <div className='flex gap-2'>
-                    <Button
-                      variant='secondary'
-                      disabled={
-                        statusMutation.isPending || e.status === 'Approved'
-                      }
-                      onClick={() => setStatus(e.studentId, 'Approved')}
-                    >
-                      Approve
-                    </Button>
-
-                    <Button
-                      variant='destructive'
-                      disabled={
-                        statusMutation.isPending || e.status === 'Denied'
-                      }
-                      onClick={() => setStatus(e.studentId, 'Denied')}
-                    >
-                      Deny
-                    </Button>
-                  </div>
-                </div>
-              ))
-            : null}
+                ))
+              : null}
+          </ScrollArea>
         </div>
       </DialogContent>
     </Dialog>

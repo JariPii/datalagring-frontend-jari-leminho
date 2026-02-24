@@ -12,10 +12,17 @@ import type {
   CreateLocationDTO,
   CreateLocationFormValues,
 } from '@/utils/types/dto';
+import CButton from '../Button/CButton';
 
 const CreateLocationDialog = () => {
   const queryClient = useQueryClient();
-  const { fields, initialValues } = buildLocationCreate();
+  const { fields, initialValues, generateLocationMockValues } =
+    buildLocationCreate();
+
+  const defaultValues =
+    process.env.NODE_ENV === 'development'
+      ? generateLocationMockValues()
+      : initialValues;
 
   const createMutation = useMutation({
     mutationFn: (dto: CreateLocationDTO) => locationService.create(dto),
@@ -29,9 +36,9 @@ const CreateLocationDialog = () => {
       <CDialog<CreateLocationFormValues>
         title='New location'
         description='Enter the city name and click save.'
-        trigger={<Button>New Location</Button>}
+        trigger={<CButton>New Location</CButton>}
         fields={fields}
-        initialValues={initialValues}
+        initialValues={defaultValues}
         onSave={async (values) => {
           const dto: CreateLocationDTO = {
             locationName: values.locationName,

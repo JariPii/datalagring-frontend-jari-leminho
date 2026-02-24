@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
   Dialog,
@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 
 import { attendeeService, courseSessionService } from '@/utils/action';
-import type { Attendee, CourseSession } from '@/utils/types/types';
+import type { CourseSession } from '@/utils/types/types';
 
 type Props = {
   instructorId: string;
@@ -25,7 +25,7 @@ const InstructorInfoDialog = ({
   instructorId,
   triggerText = 'Info',
 }: Props) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const {
     data: instructor,
@@ -49,7 +49,7 @@ const InstructorInfoDialog = ({
     enabled: open,
   });
 
-  const instructorSessions = React.useMemo(() => {
+  const instructorSessions = useMemo(() => {
     return (sessions as CourseSession[]).filter((s) =>
       s.instructors?.some((i) => i.id === instructorId),
     );
@@ -67,7 +67,7 @@ const InstructorInfoDialog = ({
         <Button variant='outline'>{triggerText}</Button>
       </DialogTrigger>
 
-      <DialogContent className='sm:max-w-[750px]'>
+      <DialogContent className='sm:max-w-187.5'>
         <DialogHeader>
           <DialogTitle>Instructor details</DialogTitle>
           <DialogDescription>
@@ -75,7 +75,6 @@ const InstructorInfoDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        {/* Instructor section */}
         <div className='grid gap-4'>
           {isInstructorPending ? <div>Loading instructor...</div> : null}
 
@@ -122,7 +121,6 @@ const InstructorInfoDialog = ({
             </div>
           ) : null}
 
-          {/* Competences */}
           <div className='rounded-md border p-4'>
             <div className='font-semibold mb-2'>Competences</div>
 
@@ -141,7 +139,6 @@ const InstructorInfoDialog = ({
             )}
           </div>
 
-          {/* Course sessions */}
           <div className='rounded-md border p-4'>
             <div className='font-semibold mb-2'>Course sessions</div>
 
