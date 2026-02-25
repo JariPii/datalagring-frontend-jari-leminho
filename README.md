@@ -1,73 +1,78 @@
 # SkillFlow – Frontend
 
-## 📖 Overview
+## Overview
 
 This is the frontend application for the SkillFlow education management system.
 
-It provides a simple user interface for interacting with the SkillFlow backend API. The frontend allows users to view, create, and manage data such as courses, participants, and enrollments.
-
-This frontend was developed as part of a **Data Storage course assignment**, where the primary focus was backend development, database design, and system architecture.
+It provides a user interface for interacting with the SkillFlow backend API and demonstrating system functionality.
 
 Backend repository:  
 https://github.com/JariPii/datalagring-jari-leminaho
 
+This frontend was developed as part of a Data Storage course assignment. The primary focus of the assignment was backend development.
+
 ---
 
-## 🎯 Purpose
+## Purpose
 
-The purpose of this frontend is to:
+The frontend allows users to:
 
-- Provide a user interface for the backend API
-- Demonstrate backend functionality
-- Test API endpoints
-- Display and manage stored data
+- View data from the backend
+- Create and manage records
+- Test backend functionality
 
 The frontend contains minimal business logic. All core logic is handled by the backend.
 
 ---
 
-## 🧱 Technologies Used
+## Technologies
 
 - Next.js
 - React
+- TypeScript
 - Tailwind CSS
 - shadcn/ui
-- TypeScript
 
 ---
 
-## 📁 Project Structure
+## Environment Variables
+
+Create a file called:
 
 ```
-app/              # Pages and routing
-components/       # React components
-components/ui/    # shadcn/ui components
-lib/              # Utilities
-public/           # Static files
+.env.local
 ```
+
+Add:
+
+```
+NEXT_PUBLIC_API_URL=https://localhost:7110
+```
+
+or
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:5031
+```
+
+This must match the backend API URL.
 
 ---
 
-## 🚀 Getting Started
+## Running the Project
 
 ### Requirements
 
-- Node.js 18 or later
-- npm, pnpm, or yarn
-
-Check version:
-
-```
-node --version
-```
+- Node.js 18+
+- npm
 
 ---
 
-### Clone the repository
+### Clone repository
 
 ```
-git clone https://github.com/JariPii/YOUR-FRONTEND-REPO.git
-cd YOUR-FRONTEND-REPO
+git clone https://github.com/JariPii/datalagring-frontend-jari-leminho.git
+cd datalagring-frontend-jari-leminho
 ```
 
 ---
@@ -86,7 +91,7 @@ npm install
 npm run dev
 ```
 
-Open in browser:
+Open:
 
 ```
 http://localhost:3000
@@ -94,42 +99,19 @@ http://localhost:3000
 
 ---
 
-## 🔗 Backend Connection
+## Backend Dependency
 
-The frontend communicates with the backend API running at:
+The frontend requires the backend API to be running.
+
+Start backend first:
 
 ```
-https://localhost:5001
-or
-http://localhost:5000
+dotnet run --project SkillFlow.Presentation
 ```
-
-Make sure the backend is running before using the frontend.
-
-Backend repository:  
-https://github.com/JariPii/datalagring-jari-leminaho
 
 ---
 
-## 🧪 Purpose in Assignment Context
-
-This frontend exists primarily to:
-
-- Demonstrate backend functionality
-- Verify database operations
-- Test API endpoints
-
-The frontend itself is not the main focus of the assignment.
-
----
-
-## 👨‍💻 Author
+## Author
 
 Jari Leminaho  
-GitHub: https://github.com/JariPii
-
----
-
-## 📄 Course Context
-
-This project was created as part of a Data Storage course assignment using .NET and modern web technologies.
+https://github.com/JariPii
