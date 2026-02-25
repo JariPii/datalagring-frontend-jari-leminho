@@ -1,234 +1,135 @@
-# 🚀 Next.js + Tailwind CSS + shadcn/ui Projekt
+# SkillFlow – Frontend
 
-Detta projekt är byggt med moderna webbteknologier för att skapa en snabb, skalbar och snygg webbapplikation.
+## 📖 Overview
 
-## 📖 Om projektet
+This is the frontend application for the SkillFlow education management system.
 
-Detta är en enkel frontend byggd med Next.js.
+It provides a simple user interface for interacting with the SkillFlow backend API. The frontend allows users to view, create, and manage data such as courses, participants, and enrollments.
 
-Projektet fungerar som ett användargränssnitt för ett separat backend-repository utvecklat i C# som en del av en skoluppgift inom datalagring.
+This frontend was developed as part of a **Data Storage course assignment**, where the primary focus was backend development, database design, and system architecture.
 
-Frontend hanterar endast presentation och kommunicerar med backend via API.
-Majoriteten av logiken och datalagringen finns i backend-projektet.
-
+Backend repository:  
 https://github.com/JariPii/datalagring-jari-leminaho
-
-## 🧱 Teknologier
-
-- [Next.js](https://nextjs.org/) – React framework
-- [React](https://react.dev/) – UI library
-- [Tailwind CSS](https://tailwindcss.com/) – Utility-first CSS framework
-- [shadcn/ui](https://ui.shadcn.com/) – Återanvändbara UI komponenter
-- [TypeScript](https://www.typescriptlang.org/) – Typning för JavaScript (om aktiverat)
 
 ---
 
-## 📦 Installation
+## 🎯 Purpose
 
-Klona repositoryt:
+The purpose of this frontend is to:
 
-```bash
-git clone <repo-url>
-cd <project-name>
+- Provide a user interface for the backend API
+- Demonstrate backend functionality
+- Test API endpoints
+- Display and manage stored data
+
+The frontend contains minimal business logic. All core logic is handled by the backend.
+
+---
+
+## 🧱 Technologies Used
+
+- Next.js
+- React
+- Tailwind CSS
+- shadcn/ui
+- TypeScript
+
+---
+
+## 📁 Project Structure
+
+```
+app/              # Pages and routing
+components/       # React components
+components/ui/    # shadcn/ui components
+lib/              # Utilities
+public/           # Static files
 ```
 
-Installera dependencies:
+---
 
-```bash
+## 🚀 Getting Started
+
+### Requirements
+
+- Node.js 18 or later
+- npm, pnpm, or yarn
+
+Check version:
+
+```
+node --version
+```
+
+---
+
+### Clone the repository
+
+```
+git clone https://github.com/JariPii/YOUR-FRONTEND-REPO.git
+cd YOUR-FRONTEND-REPO
+```
+
+---
+
+### Install dependencies
+
+```
 npm install
 ```
 
-Alternativt:
-
-```bash
-pnpm install
-# eller
-yarn install
-```
-
 ---
 
-## 💻 Starta development server
+### Run development server
 
-Starta projektet lokalt:
-
-```bash
+```
 npm run dev
 ```
 
-Öppna i webbläsaren:
+Open in browser:
 
 ```
 http://localhost:3000
 ```
 
-Applikationen uppdateras automatiskt när du ändrar filer.
+---
+
+## 🔗 Backend Connection
+
+The frontend communicates with the backend API running at:
+
+```
+https://localhost:5001
+or
+http://localhost:5000
+```
+
+Make sure the backend is running before using the frontend.
+
+Backend repository:  
+https://github.com/JariPii/datalagring-jari-leminaho
 
 ---
 
-## 🛠 Tillgängliga scripts
+## 🧪 Purpose in Assignment Context
 
-I projektet kan du köra:
+This frontend exists primarily to:
 
-```bash
-npm run dev
-```
+- Demonstrate backend functionality
+- Verify database operations
+- Test API endpoints
 
-Startar development server.
-
-```bash
-npm run build
-```
-
-Bygger applikationen för produktion.
-
-```bash
-npm run start
-```
-
-Startar produktionsservern.
-
-```bash
-npm run lint
-```
-
-Kör ESLint för att hitta problem i koden.
+The frontend itself is not the main focus of the assignment.
 
 ---
 
-## 📁 Projektstruktur
+## 👨‍💻 Author
 
-```
-.
-├── app/                # Next.js App Router (pages, layouts)
-├── components/        # React komponenter
-│   └── ui/            # shadcn/ui komponenter
-├── lib/               # Utilities och helpers
-├── public/            # Statiska filer (bilder, icons)
-├── styles/            # Globala styles
-├── tailwind.config.ts # Tailwind konfiguration
-├── components.json    # shadcn/ui konfiguration
-├── package.json
-└── README.md
-```
-
----
-
-## 🎨 UI Komponenter (shadcn/ui)
-
-För att lägga till nya komponenter:
-
-```bash
-npx shadcn-ui@latest add button
-```
-
-Exempel:
-
-```bash
-npx shadcn-ui@latest add card
-npx shadcn-ui@latest add dialog
-npx shadcn-ui@latest add input
-npx shadcn-ui@latest add form
-```
-
-Komponenterna sparas i:
-
-```
-components/ui/
-```
-
----
-
-## 🎯 Styling
-
-Projektet använder Tailwind CSS för styling.
-
-Exempel:
-
-```tsx
-export default function Example() {
-  return (
-    <button className='bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800'>
-      Klicka mig
-    </button>
-  );
-}
-```
-
----
-
-## 🏗 Bygg för produktion
-
-Bygg projektet:
-
-```bash
-npm run build
-```
-
-Starta produktion:
-
-```bash
-npm run start
-```
-
----
-
-## 🌐 Deployment
-
-Rekommenderad deployment:
-
-- [Vercel](https://vercel.com/) (rekommenderas för Next.js)
-
-Alternativ:
-
-- Netlify
-- Docker
-- VPS
-
----
-
-## ⚙️ Krav
-
-- Node.js 18 eller senare
-- npm, pnpm eller yarn
-
-Kontrollera version:
-
-```bash
-node -v
-```
-
----
-
-## 🧑‍💻 Utveckling
-
-Development server:
-
-```bash
-npm run dev
-```
-
-Build:
-
-```bash
-npm run build
-```
-
-Lint:
-
-```bash
-npm run lint
-```
-
----
-
-## 📄 Licens
-
-MIT License
-
----
-
-## 👤 Författare
-
-Jari Leminaho
+Jari Leminaho  
 GitHub: https://github.com/JariPii
+
+---
+
+## 📄 Course Context
+
+This project was created as part of a Data Storage course assignment using .NET and modern web technologies.
